@@ -9,7 +9,7 @@
   subtitle: [A story about vericoding],
   institution: [Reboot with AI],
   // date: datetime(year: 2026, month: 10, day: 1),
-  // slug: "rocq-solid",  // adds a "Follow along" QR slide, see template/lib.typ
+  slug: "rocq-solid",
   links: (
     (url: "https://github.com/vbergeron/rocq-solid", label: "Sources"),
     (url: "https://rocq-prover.org", label: "Rocq"),
