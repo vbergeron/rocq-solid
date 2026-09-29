@@ -391,8 +391,6 @@ Inductive cmd :=
 
 == Embedded firmware: no free retries
 
-#rocq-file("/theories/Pin.v", lines: (91, 92), size: 0.8em)
-
 #{
   let def(from, to, body) = (
     block(rocq-file("/theories/Pin.v", lines: (from, to), size: 0.65em)),
@@ -406,9 +404,11 @@ Inductive cmd :=
     ..def(76, 77)[The number of PIN attempts left *goes up*],
     ..def(79, 80)[The command is *the right PIN*, and the card is not blocked],
     ..def(82, 83)[The command is *the right PUK*, and the PUK is not blocked],
-    ..def(85, 86)[One or the other],
   )
 }
+
+#v(0.3em)
+#rocq-file("/theories/Pin.v", lines: (88, 89), size: 0.8em)
 
 #v(0.4em)
 No sequence of commands gives an attacker *free attempts* at your PIN. And once

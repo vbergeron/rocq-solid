@@ -82,16 +82,13 @@ Definition right_pin (s : state) (c : cmd) : Prop :=
 Definition right_puk (s : state) (c : cmd) : Prop :=
   exists p, c = Unblock (puk s) p /\ 0 < puk_tries s.
 
-Definition knows_a_secret (s : state) (c : cmd) : Prop :=
-  right_pin s c \/ right_puk s c.
-
 (* No free retries: the PIN counter only goes back up on the right PIN
    while the card is not blocked, or the right PUK while the PUK is not
    blocked. *)
 Theorem no_free_retries : forall (s : state) (c : cmd),
-  tries_go_up s c -> knows_a_secret s c.
+  tries_go_up s c -> right_pin s c \/ right_puk s c.
 Proof.
-  unfold tries_go_up, knows_a_secret, right_pin, right_puk.
+  unfold tries_go_up, right_pin, right_puk.
   intros [pn pk t pt a] c; destruct c as [g|p|k p| |]; cbn in *;
     [ destruct t as [|t]; [|destruct (digits_eqb g pn) eqn:E]
     | destruct a
