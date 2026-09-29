@@ -13,4 +13,4 @@
  (depends
   (dune (>= 3.21))
   (rocq-core (and (>= 9.1) (< 9.2)))
-  (rocq-stdlib (and (>= 9.1) (< 9.2)))))
+  (rocq-stdlib (and (>= 9.0) (< 9.2)))))

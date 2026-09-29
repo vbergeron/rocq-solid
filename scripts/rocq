@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# Runs "$@" in the Rocq environment picked by ROCQ_BACKEND:
+#   docker  (default) the $ROCQ_IMAGE container, the repository mounted at /work
+#   opam    the local opam switch in _opam/ (create it with `mise run setup`)
+set -euo pipefail
+cd "$(dirname "$0")/.."
+
+case "${ROCQ_BACKEND:-docker}" in
+  docker)
+    tty=()
+    [ -t 0 ] && [ -t 1 ] && tty=(--interactive --tty)
+    # Run as the calling user so _build/ stays theirs; the image's opam root
+    # is readable by anyone, it just has to be named since HOME changes.
+    exec docker run --rm "${tty[@]}" \
+      --volume "$PWD":/work --workdir /work \
+      --user "$(id -u):$(id -g)" \
+      --env HOME=/tmp --env OPAMROOT=/home/rocq/.opam \
+      "${ROCQ_IMAGE:?}" "$@"
+    ;;
+  opam)
+    exec opam exec --switch=. -- "$@"
+    ;;
+  *)
+    echo "ROCQ_BACKEND must be docker or opam, not '$ROCQ_BACKEND'" >&2
+    exit 2
+    ;;
+esac

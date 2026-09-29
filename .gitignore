@@ -9,3 +9,6 @@ _opam/
 *.pdf
 .typst-cache/
 site/decks/
+
+# local mise overrides (e.g. ROCQ_BACKEND = "opam")
+mise.local.toml

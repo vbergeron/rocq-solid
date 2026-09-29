@@ -2,6 +2,12 @@
 typst = "latest"
 opam = "2.4"
 
+[env]
+# docker: run Rocq in ROCQ_IMAGE (the image CI uses, nothing to build)
+# opam:   run Rocq from a local opam switch in _opam/ (`mise run setup`)
+ROCQ_BACKEND = "{{ get_env(name='ROCQ_BACKEND', default='docker') }}"
+ROCQ_IMAGE = "rocq/rocq-prover:9.1"
+
 [vars]
 deck = "decks/rocq-solid.typ"
 ocaml = "5.3.0"
@@ -9,28 +15,29 @@ ocaml = "5.3.0"
 # ---------------------------------------------------------------- Rocq ----
 
 [tasks.setup]
-description = "Create the local opam switch (_opam/) with OCaml, dune and Rocq"
+description = "Pull the Rocq image, or create the local opam switch (ROCQ_BACKEND=opam)"
 run = '''
-[ -d "${OPAMROOT:-$HOME/.opam}" ] || opam init --bare --no-setup --yes
-if [ -d _opam ]; then
+if [ "$ROCQ_BACKEND" = docker ]; then
+  docker pull "$ROCQ_IMAGE"
+elif [ -d _opam ]; then
   opam install --switch=. --deps-only --yes .
 else
+  [ -d "${OPAMROOT:-$HOME/.opam}" ] || opam init --bare --no-setup --yes
   opam switch create . "{{vars.ocaml}}" --deps-only --yes
 fi
 '''
 
+[tasks.rocq]
+description = "Run a command with Rocq and dune on PATH, e.g. `mise run rocq rocq top`"
+file = "scripts/rocq"
+
 [tasks.build]
 description = "Check every proof under theories/"
-run = "opam exec --switch=. -- dune build"
+run = "scripts/rocq dune build"
 
 [tasks.clean]
 description = "Remove dune's build directory"
-run = "opam exec --switch=. -- dune clean"
-
-[tasks.shell]
-description = "Print the environment of the local switch (eval \"$(mise run shell)\")"
-quiet = true
-run = "opam env --switch=. --set-switch"
+run = "scripts/rocq dune clean"
 
 # -------------------------------------------------------------- Slides ----
 
