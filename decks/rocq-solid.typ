@@ -565,17 +565,7 @@ both counters reach zero, the card stays *locked forever*: that is proved too.
 - *The rules are written down*: "never refund more than was paid" is in the codebase,
   checked, and cannot rot
 
-#v(0.5em)
-#align(center)[Remember the post-mortem: *nobody had written down what must be true.*]
-
-= Conclusion
-
-== Takeaways
-
-- #todo[three ideas to take home]
-
-== Rocq-solid
-
-#hero[We started by doubting our guarantees.
-
-We leave with foundations *as solid as a Rocq*.]
+#focus-slide[
+  #text(size: 1.3em)[Be the one who writes down \
+  #text(fill: coral-light, weight: "bold")[what must be true].]
+]
