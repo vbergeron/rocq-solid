@@ -12,6 +12,7 @@
   slug: "rocq-solid",
   links: (
     (url: "https://github.com/vbergeron/rocq-solid", label: "Sources"),
+    (url: "https://github.com/vbergeron/rocqducers", label: "Rocqducers"),
     (url: "https://rocq-prover.org", label: "Rocq"),
   ),
 )
@@ -226,9 +227,38 @@ const [state, dispatch] = useReducer(reducer, initialState);
 ```
 
 - A reducer is a *pure function*
-- #link("https://github.com/vbergeron/rocqducers")[Rocqducers]: the reducer
-  is written and proved in Rocq, extracted to OCaml, compiled to JS by
-  Melange, then handed to `useReducer`
+
+#v(0.5em)
+#{
+  let stage(name, note) = box(
+    stroke: 1pt + coral,
+    radius: 4pt,
+    inset: (x: 0.6em, y: 0.5em),
+    align(center)[*#name* \ #text(size: 0.7em, fill: luma(110), note)],
+  )
+  let step(label) = align(center + horizon)[
+    #text(size: 0.6em, fill: luma(110), label) \
+    #text(fill: coral, size: 1.2em)[$arrow.long$]
+  ]
+  align(center, grid(
+    columns: 7,
+    column-gutter: 0.4em,
+    align: horizon,
+    stage[Rocq][reducer + proofs],
+    step[extraction],
+    stage[OCaml][extracted code],
+    step[Melange],
+    stage[JS][ES module],
+    step[import],
+    stage[React][`useReducer`],
+  ))
+}
+
+#v(0.8em)
+#align(center)[
+  *Rocqducers*:
+  #link("https://github.com/vbergeron/rocqducers")[github.com/vbergeron/rocqducers]
+]
 
 == Remember the refund button?
 
