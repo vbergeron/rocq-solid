@@ -310,7 +310,10 @@ Whatever the user clicks, *no item is ever lost or duplicated*.
 
 == The pick list: the proof, any run
 
-#rocq-file("/theories/PickList.v", lines: (70, 80), size: 0.8em)
+#[
+  #show "reducer_keeps_picked": set text(weight: "bold")
+  #rocq-file("/theories/PickList.v", lines: (70, 80), size: 0.8em)
+]
 
 #v(0.5em)
 One step never empties the list; *by induction*, no run ever does.
