@@ -12,7 +12,6 @@
   slug: "rocq-solid",
   links: (
     (url: "https://github.com/vbergeron/rocq-solid", label: "Sources"),
-    (url: "https://github.com/vbergeron/rocqducers", label: "Rocqducers"),
     (url: "https://rocq-prover.org", label: "Rocq"),
   ),
 )
