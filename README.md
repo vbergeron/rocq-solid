@@ -16,6 +16,7 @@ theories/            Rocq sources: the `Solid` theory, built by dune
 dune-project         dune + Rocq setup (rocq-solid.opam is generated from it)
 template/lib.typ     slide template: theme, `rocq-file`, `hero`, QR slides
 template/syntaxes/   Rocq highlighting grammar (Typst bundles none)
+template/fonts/      Fira Code (OFL) for code, with its ligatures
 decks/               the talk(s), one .typ file each
 site/index.html      the GitHub Pages site listing every deck
 mise.toml            tools (Typst, opam) and tasks
@@ -47,7 +48,9 @@ mise tasks                      # list all tasks
 ```
 
 Or plain Typst; decks import the template root-absolutely, so `--root .` is
-required: `typst compile --root . decks/rocq-solid.typ`.
+required, and code is set in the vendored Fira Code, so is `--font-path
+template/fonts`: `typst compile --root . --font-path template/fonts
+decks/rocq-solid.typ`.
 
 ## Writing slides
 

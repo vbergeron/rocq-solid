@@ -344,9 +344,81 @@ One step never empties the list; *by induction*, no run ever does.
 
 #todo[event handlers and projection invariants]
 
-== Embedded firmware
+== Embedded firmware: the device is a state machine
 
-#todo[proved code on a constrained target]
+#grid(
+  columns: (1.1fr, 1fr),
+  column-gutter: 1cm,
+  [
+    #text(size: 0.75em)[
+```rocq
+step : state -> cmd -> state * resp
+
+Record state := mk_state {
+  pin : list nat;
+  puk : list nat;
+  tries : nat;       (* PIN attempts left *)
+  puk_tries : nat;   (* PUK attempts left *)
+  auth : bool        (* PIN verified *)
+}.
+
+Inductive cmd :=
+| Verify (guess : list nat)
+| Change (new_pin : list nat)
+| Unblock (puk_guess new_pin : list nat)
+| ...
+```
+    ]
+  ],
+  [
+    #set text(size: 0.85em)
+    - Your SIM card's PIN: 3 wrong tries and it blocks, the PUK unblocks it,
+      10 wrong PUKs and the card is dead
+    - The whole logic is *one pure function*, written and proved in Rocq
+    - The chip only *reads commands* and *sends answers*
+    - That same function *runs on the microcontroller*, in the *Encore!* VM:
+      what runs is what was proved
+  ],
+)
+
+#v(0.5em)
+#text(size: 0.7em)[
+  _From Rocq to Metal: A Pipeline for Formally Verified Microcontroller
+  Firmware_:
+  #link("https://arxiv.org/abs/2606.02651")[arXiv:2606.02651]
+  · Encore!: #link("https://github.com/vbergeron/encore")[github.com/vbergeron/encore]
+]
+
+== Embedded firmware: no free retries
+
+#{
+  let def(from, to, body) = (
+    block(rocq-file("/theories/Pin.v", lines: (from, to), size: 0.65em)),
+    text(size: 0.75em, body),
+  )
+  grid(
+    columns: (auto, 1fr),
+    column-gutter: 0.8cm,
+    row-gutter: 0.5em,
+    align: horizon,
+    ..def(76, 77)[The state of the card *after* the command (`step` also returns an answer)],
+    ..def(79, 80)[The number of PIN attempts left *goes up*],
+    ..def(82, 83)[The command is *the right PIN*, and the card is not blocked],
+    ..def(85, 86)[The command is *the right PUK*, and the PUK is not blocked],
+  )
+}
+
+#v(0.3em)
+#rocq-file("/theories/Pin.v", lines: (91, 92), size: 0.8em)
+
+#v(0.4em)
+No sequence of commands gives an attacker *free attempts* at your PIN. And once
+both counters reach zero, the card stays *locked forever*: that is proved too.
+
+#text(size: 0.7em)[
+  PIN and PUK logic of a SIM card:
+  #link("https://github.com/vbergeron/encore-benchmarks/tree/main/workloads/w4_pin")[encore-benchmarks, workload W4]
+]
 
 == What it changes in your architecture
 
