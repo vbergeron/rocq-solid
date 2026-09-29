@@ -208,7 +208,36 @@ Writing *what you want to prove* is much easier.]
 
 == From proof to production
 
-#todo[extraction: from Rocq to a production language]
+#align(center + horizon)[
+  #text(size: 24pt)[
+    Rocq *extracts* the proved function to a real language.
+
+    The rest of the app calls it *like any other library*.
+  ]
+
+  #v(1.2em)
+  #{
+    let ink = rgb("#23373b")
+    let target(name, lang, fn) = box(
+      width: 7cm,
+      height: 2.4cm,
+      fill: luma(240),
+      radius: 6pt,
+      align(center + horizon)[
+        #text(weight: "bold", fill: ink, name) \
+        #text(size: 0.7em, fill: luma(100), lang) \
+        #text(size: 0.8em, fn)
+      ],
+    )
+    grid(
+      columns: 3,
+      column-gutter: 0.8cm,
+      target[The browser][React, via OCaml and Melange][`reducer`],
+      target[A service][OCaml, in a Kafka consumer][`handle`],
+      target[A microcontroller][the Encore! VM][`step`],
+    )
+  }
+]
 
 == Frontend: a reducer is a pure function
 
@@ -501,13 +530,43 @@ both counters reach zero, the card stays *locked forever*: that is proved too.
 
 == What it changes in your architecture
 
-- #todo[a proved core, an unproved shell]
-- #todo[where to draw the boundary, how to enforce it]
+#align(center)[*A proved core, a thin shell*: the same shape three times]
+
+#v(0.3em)
+#{
+  set text(size: 0.8em)
+  align(center, table(
+    columns: 4,
+    align: (left, left, center, left),
+    stroke: none,
+    inset: (x: 0.5em, y: 0.5em),
+    fill: (x, y) => if x == 2 and y > 0 { coral.lighten(88%) },
+    table.header[][*The shell reads*][*The core decides*][*The shell does*],
+    [*Frontend*], [clicks], [`reducer`], [renders the new state],
+    [*Service*], [Kafka messages], [`handle`], [saves, acknowledges],
+    [*Firmware*], [commands from the phone], [`step`], [sends the answer],
+  ))
+}
+
+#v(0.5em)
+- The core is *pure*: state and event in, new state out. That is what makes it provable
+- The shell does all the I/O, and *no business rule*: small enough to review by hand
+- The boundary enforces itself: the core is generated code, with no access to the network,
+  the disk or the clock
 
 == What it changes in your codebase
 
-- #todo[fewer defensive tests, reviews focused on specifications]
-- #todo[CI: proofs are checked on every build]
+- *Tests move to the shell*: a theorem covers every input of the core, tests cover the I/O
+  around it
+- *Review moves to the specification*: read the three lines of the theorem, not the
+  proof. The AI writes the proof, Rocq checks it
+- *CI checks the proofs on every build*: a broken proof fails the build like a failing test,
+  and the shipped code is regenerated from the proved one
+- *The rules are written down*: "never refund more than was paid" is in the codebase,
+  checked, and cannot rot
+
+#v(0.5em)
+#align(center)[Remember the post-mortem: *nobody had written down what must be true.*]
 
 = Conclusion
 
