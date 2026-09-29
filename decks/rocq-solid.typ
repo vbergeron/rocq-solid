@@ -5,8 +5,8 @@
 // Each `#todo[..]` marks content still to write.
 
 #show: solid-theme.with(
-  title: [Rock-solid with Rocq],
-  subtitle: [An introduction to vericoding],
+  title: [Rocq-solid],
+  subtitle: [A story about vericoding],
   institution: [Reboot with AI],
   // date: datetime(year: 2026, month: 10, day: 1),
   // slug: "rocq-solid",  // adds a "Follow along" QR slide, see template/lib.typ
@@ -168,7 +168,7 @@ Writing *what you want to prove* is much easier.]
 
 - #todo[three ideas to take home]
 
-== Rock-solid with Rocq
+== Rocq-solid
 
 #hero[We started by doubting our guarantees.
 
