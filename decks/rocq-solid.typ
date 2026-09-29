@@ -222,28 +222,20 @@ But nobody wrote down what must be true.
   #box(baseline: 20%, image("/template/images/rocq-logo.svg", height: 1.2cm))
   #h(0.4em) 40 years of *machine-checked* proofs
 ])[
-  #{
-    let milestone(year, body) = align(center)[
-      #text(weight: "bold", fill: coral, year)
-      #box(width: 100%, height: 12pt, {
-        place(horizon, line(length: 100%, stroke: 2pt + luma(210)))
-        place(center + horizon, circle(radius: 5pt, fill: coral))
-      })
-      #text(size: 0.65em, body)
-    ]
-    grid(
-      columns: (1fr,) * 6,
-      align: top,
-      milestone[1984][Coquand and Huet start it at Inria],
-      milestone[1989][First release, named *Coq*],
-      milestone[2005][*The four colour theorem*, checked],
-      milestone[2006][CompCert, a C compiler proved correct],
-      milestone[2013][ACM Software System Award],
-      milestone[2025][Renamed *Rocq*, after Rocquencourt],
-    )
-  }
+  #set text(size: 17pt)
 
-  #v(0.8em)
+  #table(
+    columns: (auto, 1fr),
+    inset: 6pt,
+    align: left + horizon,
+    stroke: none,
+    [*1984*], [Coquand and Huet start it at Inria],
+    [*1989*], [First release, named *Coq*],
+    [*2005*], [*The four colour theorem*, checked],
+    [*2006*], [CompCert, a C compiler proved correct],
+    [*2013*], [ACM Software System Award],
+    [*2025*], [Renamed *Rocq*, after Rocquencourt],
+  )
 ]
 
 #theorem-slide[
