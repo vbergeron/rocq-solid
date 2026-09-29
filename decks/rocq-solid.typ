@@ -114,6 +114,157 @@ By Monday morning: *€180,000* refunded, on *€40,000* of orders.]
 
 #todo[numbers or an anecdote: generated code volume vs. review capacity]
 
+= Theorem provers
+
+== Evidence or proof
+
+#grid(
+  columns: (1fr, 1fr),
+  column-gutter: 1cm,
+  align: top,
+  [
+    *A test is an experiment*
+    - It checks a few cases, picked by hand
+    - A thousand white swans do not prove that *all* swans are white
+    - One black swan is enough to refute it
+    - Empirical: it can *refute*, never *establish*
+  ],
+  [
+    *A proof is a deduction*
+    - From premises, by rules, to a conclusion
+    - It covers *every* case, even infinitely many
+    - Nothing to re-run: true today, true forever
+    - Logical: as solid as its premises
+  ],
+)
+
+== The limit of testing
+
+#hero[_"Program testing can be used to show the presence of bugs,
+but never to show their absence."_
+
+#text(size: 0.6em)[Edsger W. Dijkstra, 1970]]
+
+== Who checks the proof?
+
+- A proof on paper is written by humans, and read by humans
+- Hundreds of pages, a handful of referees, errors that survive for years
+- Every step "obvious", until one of them is not
+
+#v(1em)
+#align(center)[The idea: make every step so small that *a machine can check it*.]
+
+#let timeline(..rows) = {
+  set text(size: 0.9em)
+  grid(
+    columns: (auto, 1fr),
+    column-gutter: 1em,
+    row-gutter: 0.7em,
+    align: (right + top, left + top),
+    ..rows.pos().map(((year, body)) => (
+      text(weight: "bold", fill: coral, year),
+      body,
+    )).flatten(),
+  )
+}
+
+== Mechanising reason: the dream
+
+#timeline(
+  ([c. 300 BC], [*Euclid*: a few axioms, and every theorem deduced from them]),
+  ([1679], [*Leibniz* dreams of a calculus of thought: to settle a dispute,
+    _"Calculemus!"_, let us calculate]),
+  ([1879], [*Frege* writes the first fully formal logic]),
+  ([1910], [*Whitehead and Russell* rebuild mathematics from logic:
+    $1 + 1 = 2$ on page 379]),
+  ([1931–36], [*Gödel, Church, Turing*: no machine can decide every truth.
+    But *checking* a proof, step by step, is mechanical]),
+)
+
+== Mechanising proof: the machines
+
+#timeline(
+  ([1956], [A program proves 38 theorems of the _Principia_ on its own]),
+  ([1967], [*de Bruijn*: a language in which a computer checks every step of a proof]),
+  ([1969], [*Curry–Howard*: a proposition is a type, a proof is a program]),
+  ([1976], [The four colour theorem: the first major proof that needs a computer.
+    Mathematicians doubt it]),
+  ([1994], [The Pentium division bug costs Intel \$475M:
+    chip makers start proving their hardware]),
+  ([2005], [The four colour theorem, checked end to end by a machine]),
+  ([2014], [The Kepler conjecture: the referees were "99% sure", the machine is sure]),
+  ([Today], [Mathematicians formalise research results; *AI writes proofs*]),
+)
+
+== Rocq
+
+#grid(
+  columns: (1fr, 1fr),
+  column-gutter: 1cm,
+  align: top,
+  [
+    #set text(size: 0.8em)
+    *When*
+    - *1984*: Thierry Coquand and Gérard Huet start it at Inria Rocquencourt,
+      on the Calculus of Constructions
+    - *1989*: first release, named *Coq*
+    - *1991*: inductive types, by Christine Paulin-Mohring
+    - *2013*: ACM Software System Award
+    - *2025*: renamed *Rocq*, for Rocquencourt. This talk runs on Rocq 9.1
+  ],
+  [
+    #set text(size: 0.8em)
+    *How*
+    - A *functional language* with dependent types: a specification is a type,
+      a proof is a program of that type
+    - *Tactics*: you steer, Rocq builds the proof
+    - A *small trusted kernel* re-checks every proof: no need to trust the
+      tactics, nor whoever wrote them
+    - *Extraction*: the proved program becomes OCaml, Haskell or Scheme
+  ],
+)
+
+#v(0.5em)
+#text(size: 0.75em)[
+  *Proved with it*: CompCert, a C compiler proved correct · the four colour
+  theorem · the Feit–Thompson theorem · Fiat Cryptography, the elliptic curve
+  code running in Chrome
+]
+
+#empty-slide[
+  #align(center + horizon, image("/template/images/lean-logo.svg", width: 55%))
+]
+
+== The others
+
+#{
+  set text(size: 0.75em)
+  align(center, table(
+    columns: 4,
+    align: (left, left, left, left),
+    stroke: none,
+    inset: (x: 0.6em, y: 0.45em),
+    fill: (x, y) => if y > 0 and calc.even(y) { luma(245) },
+    table.header[*Tool*][*Since*][*Style*][*Known for*],
+    [*Isabelle*], [1986, Cambridge and Munich], [higher-order logic],
+      [seL4, an OS kernel proved correct],
+    [*HOL Light*], [1994, John Harrison], [higher-order logic, tiny kernel],
+      [Intel floating point, Kepler],
+    [*ACL2*], [1990, Austin], [first-order logic on Lisp],
+      [AMD and Intel arithmetic units],
+    [*Mizar*], [1973, Poland], [set theory, readable proofs],
+      [the oldest library of formal maths],
+    [*Agda*], [2007, Chalmers], [dependent types],
+      [programs that carry their proofs],
+    [*F\**], [2011, Microsoft and Inria], [dependent types + SMT],
+      [HACL\*: crypto in Firefox and Linux],
+    [*Dafny*], [2009, Microsoft], [program verifier + SMT],
+      [AWS's authorization engine],
+    [*TLA+*], [1999, Leslie Lamport], [specifications of systems],
+      [protocols at AWS and Azure],
+  ))
+}
+
 = Vericoding
 
 == Definition
@@ -121,11 +272,6 @@ By Monday morning: *€180,000* refunded, on *€40,000* of orders.]
 - Making formal verification an *everyday tool*
 - Taking proof assistants out of research labs
 - Putting them in the hands of teams that ship to production
-
-== Rocq in one slide
-
-- #todo[proof assistant, trusted kernel, extraction]
-- #todo[quick history: Coq becomes Rocq, CompCert, etc.]
 
 == The asymmetry
 
