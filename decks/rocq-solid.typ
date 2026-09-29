@@ -148,7 +148,7 @@ Writing *what you want to prove* is much easier.]
 
 == Example: the proof
 
-#rocq-file("/theories/Intro.v", lines: (20, 25))
+#rocq-file("/theories/Intro.v", lines: (20, 26))
 
 #todo[the proof produced by the agent, checked by Rocq]
 
