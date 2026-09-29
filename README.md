@@ -50,7 +50,8 @@ required: `typst compile --root . decks/rocq-solid.typ`.
 Each `= Section` opens a section slide and each `== Title` a new slide.
 `rocq-file("/theories/Intro.v", lines: (20, 25))` shows a range of a checked
 source file, so the code on screen is the code `mise run build` checks;
-fenced ```` ```rocq ```` blocks are highlighted too.
+fenced ```` ```rocq ```` blocks are highlighted too. `#todo[..]` marks content
+still to write, in grey italics.
 
 Setting `slug` in `solid-theme.with(..)` adds a "Follow along" slide with QR
 codes to `https://vbergeron.github.io/rocq-solid/decks/<slug>.pdf`, which
