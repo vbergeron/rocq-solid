@@ -73,8 +73,11 @@ Proof.
 Qed.
 
 (* The words of the theorem, one definition each. *)
+Definition next_state (s : state) (c : cmd) : state :=
+  fst (step s c).
+
 Definition tries_go_up (s : state) (c : cmd) : Prop :=
-  tries s < tries (fst (step s c)).
+  tries s < tries (next_state s c).
 
 Definition right_pin (s : state) (c : cmd) : Prop :=
   c = Verify (pin s) /\ 0 < tries s.
@@ -88,7 +91,7 @@ Definition right_puk (s : state) (c : cmd) : Prop :=
 Theorem no_free_retries : forall (s : state) (c : cmd),
   tries_go_up s c -> right_pin s c \/ right_puk s c.
 Proof.
-  unfold tries_go_up, right_pin, right_puk.
+  unfold tries_go_up, next_state, right_pin, right_puk.
   intros [pn pk t pt a] c; destruct c as [g|p|k p| |]; cbn in *;
     [ destruct t as [|t]; [|destruct (digits_eqb g pn) eqn:E]
     | destruct a
