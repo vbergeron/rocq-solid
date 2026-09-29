@@ -233,18 +233,14 @@ const [state, dispatch] = useReducer(reducer, initialState);
 
 == Remember the refund button?
 
-#grid(
-  columns: (auto, 1fr),
-  column-gutter: 1cm,
-  rocq-file("/theories/AsyncButton.v", lines: (5, 15), size: 0.8em),
-  [
-    #rocq-file("/theories/AsyncButton.v", lines: (17, 20), size: 0.8em)
-    #v(1em)
-    A click while the request is in flight *does nothing*.
+#rocq-file("/theories/AsyncButton.v", lines: (5, 15))
 
-    Not a disabled button, not a guard in a handler: *a theorem*.
-  ],
-)
+== The refund button: the proof
+
+#rocq-file("/theories/AsyncButton.v", lines: (17, 20))
+
+#v(1em)
+A click while the request is in flight *does nothing*.
 
 == The pick list: the statement
 
