@@ -1,0 +1,10 @@
+; theories/Orders.v extracted to OCaml, then compiled: the handler a Kafka
+; consumer would call.
+(rocq.extraction
+ (prelude OrdersExtraction)
+ (extracted_modules orders)
+ (theories Solid Stdlib))
+
+(library
+ (name orders)
+ (flags (:standard -w -a)))

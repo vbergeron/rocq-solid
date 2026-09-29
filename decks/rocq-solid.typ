@@ -214,10 +214,6 @@ Writing *what you want to prove* is much easier.]
 
 #todo[extraction: from Rocq to a production language]
 
-== Backend
-
-#todo[a service whose business core is extracted from Rocq]
-
 == Frontend: a reducer is a pure function
 
 ```ts
@@ -340,9 +336,96 @@ One step never empties the list; *by induction*, no run ever does.
   ],
 )
 
-== Event-driven systems
+== Event processing: an order is a list of events
 
-#todo[event handlers and projection invariants]
+#grid(
+  columns: (1.1fr, 1fr),
+  column-gutter: 1cm,
+  [
+    #rocq-file("/theories/Orders.v", lines: (7, 15), size: 0.75em)
+    #text(size: 0.75em)[
+```rocq
+handle : order -> event -> order
+```
+    ]
+    #rocq-file("/theories/Orders.v", lines: (37, 39), size: 0.75em)
+  ],
+  [
+    #set text(size: 0.85em)
+    - Every change is an *event*: a payment, a refund
+    - The order is *replayed* from its events, one `handle` at a time
+    - Queues deliver *at least once*: the same event can arrive *twice*
+    - `handle` is a pure function: proved in Rocq, called by the consumer
+  ],
+)
+
+== Event processing: Jack's refunds, proved
+
+#rocq-file("/theories/Orders.v", lines: (51, 52), size: 0.8em)
+
+Whatever events arrive, in whatever order: *never more refunded than paid*.
+
+#v(0.8em)
+
+#rocq-file("/theories/Orders.v", lines: (61, 62), size: 0.8em)
+
+An event delivered twice is *counted once*.
+
+#v(0.8em)
+#align(center)[Friday, 23:47 *cannot happen*.]
+
+== Shipping it: extraction to OCaml
+
+#rocq-file("/extraction/OrdersExtraction.v", lines: (4, 7), size: 0.65em)
+
+#text(size: 0.6em)[
+```ocaml
+(* orders.ml, written by dune build *)
+let handle o e =
+  if already_seen o e
+  then o
+  else let seen' = (event_id e) :: o.seen in
+       (match e with
+        | Paid (_, n) ->
+          { seen = seen'; paid = (add o.paid n); refunded = o.refunded }
+        | Refunded (_, n) ->
+          if (<=) (add o.refunded n) o.paid
+          then { seen = seen'; paid = o.paid; refunded = (add o.refunded n) }
+          else { seen = seen'; paid = o.paid; refunded = o.refunded })
+```
+]
+
+#[
+  #set text(size: 0.8em)
+  - Every `dune build` re-checks the proofs, *regenerates* `orders.ml` and compiles it
+  - The OCaml is generated, *never edited*: the code that ships is the code that was proved
+  - What we trust: Rocq's extraction, and `nat` mapped to OCaml's `int`
+]
+
+== Shipping it: a Kafka consumer
+
+#text(size: 0.7em)[
+```ocaml
+(* consumer.ml: the thin shell around the proved core *)
+let rec loop state =
+  match Kafka.consume ~timeout_ms:1000 topic partition with
+  | Kafka.Message (_, _, offset, payload, _) ->
+      let event = Codec.decode payload in          (* parse *)
+      let next = Orders.handle state event in      (* proved *)
+      Store.save next;                             (* persist *)
+      Kafka.store_offset topic partition offset;   (* acknowledge *)
+      loop next
+  | Kafka.PartitionEnd _ -> loop state
+```
+]
+
+#[
+  #set text(size: 0.85em)
+  - The shell only *parses*, *persists* and *acknowledges*: a few lines, reviewed by hand
+  - A crash between `save` and the acknowledgement? Kafka delivers the event *again*:
+    `delivered_twice_counted_once` says it is harmless
+  - The business rule lives in `Orders.handle`, *proved*
+]
 
 == Embedded firmware: the device is a state machine
 
