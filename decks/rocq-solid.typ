@@ -352,26 +352,32 @@ One step never empties the list; *by induction*, no run ever does.
   [
     #text(size: 0.75em)[
 ```rocq
-step : State * Event -> State * list Effect
+step : state -> cmd -> state * resp
 
-Inductive Event :=     (* polled by the host *)
-  | InApdu (bytes : Bytes)
-  | ApprovedTx
-  | RejectedTx.
+Record state := mk_state {
+  pin : list nat;
+  puk : list nat;
+  tries : nat;       (* PIN attempts left *)
+  puk_tries : nat;   (* PUK attempts left *)
+  auth : bool        (* PIN verified *)
+}.
 
-Inductive Effect :=    (* performed by the host *)
-  | OutApdu (bytes : Bytes)
-  | DisplayProps (to value : Bytes).
+Inductive cmd :=
+| Verify (guess : list nat)
+| Change (new_pin : list nat)
+| Unblock (puk_guess new_pin : list nat)
+| ...
 ```
     ]
   ],
   [
     #set text(size: 0.85em)
-    - The whole firmware is *one pure function*, written and proved in Rocq
-    - The host only *polls events* and *performs effects*: a thin layer that
-      stays the same size as the app grows
-    - The Gallina itself runs on a Cortex-M, in the *Encore!* VM: what runs is
-      what was proved
+    - Your SIM card's PIN: 3 wrong tries and it blocks, the PUK unblocks it,
+      10 wrong PUKs and the card is dead
+    - The whole logic is *one pure function*, written and proved in Rocq
+    - The chip only *reads commands* and *sends answers*
+    - That same function *runs on the microcontroller*, in the *Encore!* VM:
+      what runs is what was proved
   ],
 )
 
@@ -383,12 +389,14 @@ Inductive Effect :=    (* performed by the host *)
   · Encore!: #link("https://github.com/vbergeron/encore")[github.com/vbergeron/encore]
 ]
 
-== Embedded firmware: pull the plug, anywhere
+== Embedded firmware: no free retries
 
 #text(size: 0.8em)[
 ```rocq
-Theorem power_cut_safe : forall f r c i,
-  Inv f -> progress f (boot (apply_all f (firstn i (effects f r c)))).
+Theorem tries_up_only_with_secret : forall s c,
+  tries s < tries (fst (step s c)) ->
+  (exists g, c = Verify g /\ g = pin s /\ 0 < tries s) \/
+  (exists k p, c = Unblock k p /\ k = puk s /\ 0 < puk_tries s).
 ```
 ]
 
@@ -399,23 +407,20 @@ Theorem power_cut_safe : forall f r c i,
     column-gutter: 0.8cm,
     row-gutter: 0.6em,
     align: top,
-    [`forall f r c i`], [For every flash state, download in progress, command, and cut point],
-    [`Inv f`], [If the device boots a valid image, not below the anti-rollback counter],
-    [`firstn i (effects ...)`], [and the power dies after only the first `i` flash writes of the command],
-    [`boot (...)`], [then, once the bootloader has run,],
-    [`progress f ...`], [the device *still boots a valid image*, and neither the installed version
-      nor the anti-rollback counter *ever went down*.],
+    [`forall s c`], [Whatever state the card is in, whatever command it receives:],
+    [`tries s < tries (...)`], [if the number of PIN attempts left *goes up*,],
+    [`c = Verify g /\ g = pin s`], [then the command was *the right PIN*, while the card was not blocked,],
+    [`c = Unblock k p /\ k = puk s`], [or *the right PUK*, while the PUK was not blocked.],
   )
 }
 
 #v(0.4em)
-The proof even pins down the order of two writes: raise the counter before
-clearing the trial flag, cut in between, and the device *reverts to an image
-below the counter*.
+No sequence of commands gives an attacker *free attempts* at your PIN. And once
+both counters reach zero, the card stays *locked forever*: that is proved too.
 
 #text(size: 0.7em)[
-  A/B firmware update, MCUboot style:
-  #link("https://github.com/vbergeron/encore-benchmarks/tree/main/workloads/w5_update")[encore-benchmarks, workload W5]
+  PIN and PUK logic of a SIM card:
+  #link("https://github.com/vbergeron/encore-benchmarks/tree/main/workloads/w4_pin")[encore-benchmarks, workload W4]
 ]
 
 == What it changes in your architecture
