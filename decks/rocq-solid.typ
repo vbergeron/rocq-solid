@@ -225,8 +225,7 @@ const [state, dispatch] = useReducer(reducer, initialState);
 // reducer: (state, event) => state
 ```
 
-- No I/O, no clock, no DOM: *just a function*
-- A pure function is a mathematical object: *it can be proved*
+- A reducer is a *pure function*
 - #link("https://github.com/vbergeron/rocqducers")[Rocqducers]: the reducer
   is written and proved in Rocq, extracted to OCaml, compiled to JS by
   Melange, then handed to `useReducer`
