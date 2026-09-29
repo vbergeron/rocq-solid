@@ -5,8 +5,8 @@
 // Each `#todo[..]` marks content still to write.
 
 #show: solid-theme.with(
-  title: [Solide comme un Rocq],
-  subtitle: [Une introduction au vericoding],
+  title: [Rock-solid with Rocq],
+  subtitle: [An introduction to vericoding],
   institution: [Reboot with AI],
   // date: datetime(year: 2026, month: 10, day: 1),
   // slug: "rocq-solid",  // adds a "Follow along" QR slide, see template/lib.typ
@@ -16,160 +16,160 @@
   ),
 )
 
-= Douter de nos garanties
+= Doubting our guarantees
 
-== La question
+== The question
 
-#hero[Les tests et les types sont censés nous protéger des bugs.
+#hero[Tests and types are supposed to protect us from bugs.
 
-*Mais qui vérifie que ces garanties tiennent vraiment ?*]
+*But who checks that those guarantees actually hold?*]
 
-== Ce que les tests garantissent
+== What tests guarantee
 
-- Des exemples, pas des propriétés
-- #todo[un bug qui passe une suite de tests verte]
+- Examples, not properties
+- #todo[a bug that gets through a green test suite]
 
-== Ce que les types garantissent
+== What types guarantee
 
-- La forme des données, rarement leur sens
-- #todo[un invariant que le système de types ne voit pas]
+- The shape of data, rarely its meaning
+- #todo[an invariant the type system cannot see]
 
-== L'urgence
+== The urgency
 
-#hero[Les agents IA écrivent du code *plus vite qu'on ne peut le relire*.]
+#hero[AI agents write code *faster than we can review it*.]
 
-#todo[chiffres ou anecdote : volume de code généré vs capacité de revue]
+#todo[numbers or an anecdote: generated code volume vs. review capacity]
 
-= Le vericoding
+= Vericoding
 
-== Définition
+== Definition
 
-- Faire de la vérification formelle un *outil du quotidien*
-- Sortir les assistants de preuve des labos de recherche
-- Les mettre entre les mains des équipes qui livrent en prod
+- Making formal verification an *everyday tool*
+- Taking proof assistants out of research labs
+- Putting them in the hands of teams that ship to production
 
-== Rocq en une slide
+== Rocq in one slide
 
-- #todo[assistant de preuve, noyau de confiance, extraction]
-- #todo[historique rapide : Coq devient Rocq, CompCert, etc.]
+- #todo[proof assistant, trusted kernel, extraction]
+- #todo[quick history: Coq becomes Rocq, CompCert, etc.]
 
-== L'asymétrie
+== The asymmetry
 
-#hero[Écrire une preuve, c'est dur.
+#hero[Writing a proof is hard.
 
-Écrire *ce qu'on veut prouver*, beaucoup moins.]
+Writing *what you want to prove* is much easier.]
 
-== La répartition des rôles
+== Who does what
 
-- *Vous* : dites ce qui doit être vrai (la spécification)
-- *L'IA* : se débrouille pour démontrer pourquoi (la preuve)
-- *Rocq* : vérifie la preuve, sans avoir à faire confiance à l'IA
+- *You*: state what must be true (the specification)
+- *The AI*: figures out why it holds (the proof)
+- *Rocq*: checks the proof, without having to trust the AI
 
-== Exemple : la spécification
+== Example: the specification
 
 // Placeholder example, to replace with the talk's running example.
 #rocq-file("/theories/Intro.v", lines: (20, 20))
 
-#todo[l'énoncé écrit par l'humain, lisible sans lire la preuve]
+#todo[the statement written by a human, readable without the proof]
 
-== Exemple : la preuve
+== Example: the proof
 
 #rocq-file("/theories/Intro.v", lines: (20, 25))
 
-#todo[la preuve produite par l'agent, vérifiée par Rocq]
+#todo[the proof produced by the agent, checked by Rocq]
 
-== Des garanties d'un nouveau genre
+== A new kind of guarantee
 
 #grid(
   columns: (1fr, 1fr),
   column-gutter: 1cm,
   [
-    *Interface aujourd'hui*
-    - Une promesse
-    - Documentée, testée, espérée
+    *Interfaces today*
+    - A promise
+    - Documented, tested, hoped for
   ],
   [
-    *Interface prouvée*
-    - Un contrat
-    - Vérifié par la machine
+    *Proved interfaces*
+    - A contract
+    - Checked by the machine
   ],
 )
 
-= Quoi prouver ?
+= What to prove?
 
-== Le code qui mérite d'être prouvé
+== Code worth proving
 
 - *Invariants*
-- *Machines à états*
-- *Règles métier* où un bug n'est pas un incident mais peut coûter très cher
+- *State machines*
+- *Business rules* where a bug is not just an incident but can cost a lot
 
 == Invariants
 
-#todo[exemple d'invariant et sa spécification Rocq]
+#todo[an invariant and its Rocq specification]
 
-== Machines à états
+== State machines
 
-#todo[exemple de machine à états : transitions interdites, états inatteignables]
+#todo[a state machine: forbidden transitions, unreachable states]
 
-== Règles métier
+== Business rules
 
-#todo[exemple de règle métier coûteuse : facturation, droits, quotas…]
+#todo[a costly business rule: billing, permissions, quotas…]
 
-== Où la preuve rapporte, où elle ne vaut pas l'effort
+== Where proof pays off, where it is not worth it
 
 #grid(
   columns: (1fr, 1fr),
   column-gutter: 1cm,
   [
-    *Rapporte gros*
-    - #todo[critères : coût d'un bug, stabilité de la spec…]
+    *Pays off*
+    - #todo[criteria: cost of a bug, stability of the spec…]
   ],
   [
-    *Ne vaut pas l'effort*
-    - #todo[critères : UI changeante, code jetable…]
+    *Not worth it*
+    - #todo[criteria: fast-changing UI, throwaway code…]
   ],
 )
 
-= Livrer du code prouvé
+= Shipping proved code
 
-== De la preuve à la prod
+== From proof to production
 
-#todo[extraction : de Rocq vers un langage de production]
+#todo[extraction: from Rocq to a production language]
 
 == Backend
 
-#todo[exemple : un service dont le cœur métier est extrait de Rocq]
+#todo[a service whose business core is extracted from Rocq]
 
 == Frontend
 
-#todo[exemple : logique d'état côté client prouvée]
+#todo[proved client-side state logic]
 
-== Systèmes événementiels
+== Event-driven systems
 
-#todo[exemple : handlers d'événements et invariants de projection]
+#todo[event handlers and projection invariants]
 
-== Firmware embarqué
+== Embedded firmware
 
-#todo[exemple : code prouvé sur cible contrainte]
+#todo[proved code on a constrained target]
 
-== Ce que ça change dans votre archi
+== What it changes in your architecture
 
-- #todo[un noyau prouvé, une coquille non prouvée]
-- #todo[où placer la frontière, comment la faire respecter]
+- #todo[a proved core, an unproved shell]
+- #todo[where to draw the boundary, how to enforce it]
 
-== Ce que ça change dans votre codebase
+== What it changes in your codebase
 
-- #todo[moins de tests défensifs, revues centrées sur les spécifications]
-- #todo[CI : les preuves sont vérifiées à chaque build]
+- #todo[fewer defensive tests, reviews focused on specifications]
+- #todo[CI: proofs are checked on every build]
 
 = Conclusion
 
-== À retenir
+== Takeaways
 
-- #todo[trois idées à emporter]
+- #todo[three ideas to take home]
 
-== Solide comme un Rocq
+== Rock-solid with Rocq
 
-#hero[On a commencé par douter de nos garanties.
+#hero[We started by doubting our guarantees.
 
-On repartira avec des fondations *solides comme un Rocq*.]
+We leave with foundations *as solid as a Rocq*.]

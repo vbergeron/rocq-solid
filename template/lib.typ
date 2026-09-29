@@ -14,7 +14,7 @@
 #let hero(body) = align(center + horizon, text(size: 28pt, body))
 
 // Placeholder for slide content still to write.
-#let todo(body) = text(fill: luma(140), style: "italic")[TODO : #body]
+#let todo(body) = text(fill: luma(140), style: "italic")[TODO: #body]
 
 // A Rocq source file from the repository, shown verbatim: the code on the
 // slide is the code `mise run build` checks. `path` is root-absolute
