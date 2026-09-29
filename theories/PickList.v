@@ -5,9 +5,11 @@ From Stdlib Require Import List.
 Import ListNotations.
 
 Record state (A : Type) := mk { picked : list A; suggestions : list A }.
-Arguments mk {A}. Arguments picked {A}. Arguments suggestions {A}.
 
 Inductive event := DoPick (i : nat) | DoUnpick (i : nat).
+
+(* Let Rocq infer the item type [A]: write [picked s], not [picked A s]. *)
+Arguments mk {A}. Arguments picked {A}. Arguments suggestions {A}.
 
 Fixpoint remove_at {A} (i : nat) (l : list A) : list A :=
   match l, i with

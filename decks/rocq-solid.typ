@@ -276,24 +276,26 @@ A click while the request is in flight *does nothing*.
 
 == The pick list: the statement
 
-#rocq-file("/theories/PickList.v", lines: (7, 10), size: 0.8em)
+#rocq-file("/theories/PickList.v", lines: (7, 9), size: 0.8em)
 
-#rocq-file("/theories/PickList.v", lines: (60, 62), size: 0.8em)
+#v(0.5em)
+
+#rocq-file("/theories/PickList.v", lines: (62, 64), size: 0.8em)
 
 #v(0.5em)
 Replay *any* sequence of dispatched events: at least one item stays picked.
 
 == The pick list: the reducer
 
-#rocq-file("/theories/PickList.v", lines: (25, 39), size: 0.8em)
+#rocq-file("/theories/PickList.v", lines: (27, 41), size: 0.8em)
 
 == The pick list: the proof, one step
 
-#rocq-file("/theories/PickList.v", lines: (44, 58), size: 0.75em)
+#rocq-file("/theories/PickList.v", lines: (46, 60), size: 0.75em)
 
 == The pick list: the proof, any run
 
-#rocq-file("/theories/PickList.v", lines: (60, 68), size: 0.8em)
+#rocq-file("/theories/PickList.v", lines: (62, 70), size: 0.8em)
 
 #v(0.5em)
 One step never empties the list; *by induction*, no run ever does.
