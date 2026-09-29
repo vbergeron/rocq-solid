@@ -117,112 +117,70 @@ By Monday morning: *€180,000* refunded, on *€40,000* of orders.]
 = Theorem provers
 
 // These slides keep the section's name in the header and put their
-// message in the body, large, where it is read.
+// message in the body, large, where it is read. They tell one story:
+// examples cannot establish a truth, a proof can, and the hard part is
+// checking the proof, until a machine does it.
 #let theorem-slide = message-slide.with(title: [Theorem provers])
 
-// 906 million green tests
+// Evidence is not proof.
 #theorem-slide(message: [906 million green tests. *Still false.*])[
   #grid(
     columns: (1fr, 1fr),
     column-gutter: 1.2cm,
     align: horizon,
-    [
-      #text(size: 22pt)[
-        *Pólya, 1919*: up to any number, at least half of the numbers have an
-        *odd* number of prime factors.
-      ]
+    text(size: 22pt)[
+      *Pólya, 1919*: up to any number, at least half of the numbers have an
+      *odd* number of prime factors.
 
-      #v(0.8em)
-      Checked, and checked again, for *39 years*.
+      #v(0.5em)
+      Believed for *39 years*.
     ],
     {
       set text(font: "Fira Code", size: 15pt, fill: luma(230))
       let ok = text(fill: rgb("#7cc47f"))[✓]
-      let ko = text(fill: coral-light, weight: "bold")[✗]
       block(fill: rgb("#23373b"), radius: 6pt, inset: 1em, width: 100%)[
         #ok n = 2 \
         #ok n = 3 \
         #ok n = 4 \
         #text(fill: luma(140))[  … 906 150 250 more …] \
         #ok n = 906 150 256 \
-        #ko #text(fill: coral-light, weight: "bold")[n = 906 150 257]
+        #text(fill: coral-light, weight: "bold")[✗ n = 906 150 257]
       ]
     },
   )
+
+  #v(1em)
+  #align(center)[
+    _"Testing can show the presence of bugs, never their absence."_ \
+    #text(size: 0.7em, fill: luma(120))[Edsger W. Dijkstra]
+  ]
 ]
 
-// A test is a witness, a theorem is a law
-#theorem-slide(message: [A test is a *witness*. A theorem is a *law*.])[
+// A proof covers every case; checking one is the hard part.
+#theorem-slide(message: [A proof covers every case. *Who checks it?*])[
+  #let caption(body) = text(size: 14pt, fill: luma(120), body)
   #grid(
     columns: (1fr, 1fr),
-    column-gutter: 1cm,
-    align: top,
-    [
-      *A test*
-      #text(size: 0.95em)[
-  ```ts
-  expect(rev(rev([1, 2, 3])))
-    .toEqual([1, 2, 3]);
-  ```
-      ]
-      One list, out of infinitely many.
-    ],
-    [
-      *A theorem*
-      #text(size: 0.95em)[
-  ```rocq
-  Theorem rev_involutive :
-    forall {A : Type} (l : list A),
-      rev (rev l) = l.
-  ```
-      ]
-      Every list, of every type. Forever.
-    ],
+    column-gutter: 1.5cm,
+    row-gutter: 0.6em,
+    align: (x, y) => center + if y == 0 { horizon } else { top },
+    rows: (3.2cm, auto),
+    text(size: 20pt)[_"When there are disputes, we can simply say:
+      *let us calculate*, to see who is right."_],
+    text(size: 60pt, weight: "bold", fill: coral)[$1 + 1 = 2$],
+    caption[Leibniz, 1685: the dream],
+    caption[_Principia Mathematica_, 1910, page 379: the price],
   )
 
   #v(1em)
   #align(center, text(size: 22pt)[
-    A test is *empirical*: it can refute. \
-    A proof is *logical*: it establishes.
+    Every step is mechanical, and there are thousands:
+    *a job for a machine*.
   ])
 ]
 
-// The limit of testing
-#theorem-slide[
-  #hero[_"Program testing can be used to show the presence of bugs,
-  but never to show their absence."_
-
-  #text(size: 0.6em)[Edsger W. Dijkstra, 1970]]
-]
-
-// Calculemus!
-#theorem-slide(message: [The dream: reasoning as *mechanical* as arithmetic])[
-  #hero[_"When there are disputes among persons, we can simply say:
-  *let us calculate*, without further ado, to see who is right."_
-
-  #text(size: 0.6em)[Gottfried Wilhelm Leibniz, 1685]]
-]
-
-// Page 379
-#theorem-slide(message: [Perfect rigour is *unbearable* for humans])[
-  #align(center + horizon)[
-    #text(size: 80pt, weight: "bold", fill: coral)[$1 + 1 = 2$]
-
-    #v(0.3em)
-    #text(size: 18pt)[
-      _"From this proposition it will follow, when arithmetical addition has
-      been defined, that 1 + 1 = 2."_
-    ]
-
-    #text(size: 14pt, fill: luma(120))[Whitehead and Russell, _Principia Mathematica_, 1910, page 379]
-
-    #v(0.8em)
-    #text(size: 24pt)[A job for a *machine*.]
-  ]
-]
-
-// 1976: a proof nobody can read
-#theorem-slide(message: [1976: a proof *no human* can read])[
+// The machine enters, and trust breaks.
+#theorem-slide(message: [1976: the machine proves. *Nobody can check.*])[
   #grid(
     columns: (1.4fr, 1fr),
     column-gutter: 1.5cm,
@@ -231,10 +189,11 @@ By Monday morning: *€180,000* refunded, on *€40,000* of orders.]
       Any map can be coloured with *four colours*, no two neighbours alike.
 
       #v(0.5em)
-      The proof: *1,200 hours* of computer time.
+      The proof takes *1,200 hours* of computation, and no human can
+      follow it.
 
       #v(0.5em)
-      *Is it still a proof?*
+      Mathematicians split: *is it still a proof?*
     ],
     {
       let (r, b, g, y) = (
@@ -253,54 +212,9 @@ By Monday morning: *€180,000* refunded, on *€40,000* of orders.]
   )
 ]
 
-// 1994: a bug worth \$475 million
-#theorem-slide(message: [1994: a division bug costs *\$475 million*])[
-  #align(center + horizon)[
-    #text(size: 34pt, font: "Fira Code")[4195835 / 3145727]
-
-    #v(0.5em)
-    #grid(
-      columns: 2,
-      column-gutter: 1em,
-      row-gutter: 0.6em,
-      align: (right, left),
-      text(size: 20pt)[Mathematics:], text(size: 26pt, font: "Fira Code")[1.33382…],
-      text(size: 20pt)[Pentium:], text(size: 26pt, font: "Fira Code", fill: coral)[1.33373…],
-    )
-
-    #v(1em)
-    #text(size: 20pt)[Five missing entries in a lookup table, millions of chips recalled.
-
-      Since then, chip makers *prove* their arithmetic.]
-  ]
-]
-
-// Kepler's oranges
-#theorem-slide(message: [The referees: 99% sure. The machine: *sure*.])[
-  #align(center + horizon)[
-    #text(size: 22pt)[How do you stack oranges as tightly as possible?
-      *Like the grocer does*, guessed Kepler in 1611.]
-
-    #v(1em)
-    #grid(
-      columns: 3,
-      column-gutter: 1.5cm,
-      align: center + top,
-      ..(
-        ([1998], [A proof: 300 pages \ and 3 GB of code]),
-        ([2003], [12 referees, 4 years: \ _"99% certain"_]),
-        ([2014], [A machine checks \ every step: *sure*]),
-      ).map(((year, body)) => [
-        #text(size: 30pt, weight: "bold", fill: coral, year) \
-        #text(size: 18pt, body)
-      ])
-    )
-  ]
-]
-
-// The trick
-#theorem-slide(message: [Don't trust who *wrote* the proof. Trust who *checks* it.])[
-  #align(center + horizon)[
+// The way out: a small, trusted checker.
+#theorem-slide(message: [The way out: trust *only the checker*])[
+  #align(center)[
     #{
       let ink = rgb("#23373b")
       let stage(name, note, fill: luma(240)) = box(
@@ -318,7 +232,7 @@ By Monday morning: *€180,000* refunded, on *€40,000* of orders.]
         columns: 5,
         column-gutter: 0.5em,
         align: horizon,
-        stage[Anyone][a human, a search, an AI],
+        stage[Anyone][a person, a program],
         arrow,
         stage[A proof][every step written out],
         arrow,
@@ -326,13 +240,39 @@ By Monday morning: *€180,000* refunded, on *€40,000* of orders.]
       )
     }
 
-    #v(1.5em)
-    #text(size: 18pt, fill: luma(100))[Nicolaas de Bruijn, 1967]
+    #v(1.2em)
+    #text(size: 22pt)[
+      Who wrote the proof, and how, *no longer matters*.
+    ]
+
+    #text(size: 14pt, fill: luma(120))[Nicolaas de Bruijn, 1967]
   ]
 ]
 
-// Rocq
-#theorem-slide(message: [#box(baseline: 20%, image("/template/images/rocq-logo.svg", height: 1.2cm)) #h(0.4em) 40 years of *machine-checked* proofs])[
+// The payoff: what humans could not check, machines now do.
+#theorem-slide(message: [Since then, machines check what *humans cannot*])[
+  #align(center, grid(
+    columns: (1fr,) * 3,
+    column-gutter: 1cm,
+    align: center + top,
+    ..(
+      ([1994], [The Pentium divides wrong, past every test:
+        *\$475 million*. Chip makers start proving their arithmetic]),
+      ([2005], [The four colour theorem, checked *end to end*.
+        The debate is over]),
+      ([2014], [Kepler's conjecture: the referees were _"99% certain"_.
+        The machine is *sure*]),
+    ).map(((year, body)) => [
+      #text(size: 36pt, weight: "bold", fill: coral, year) \
+      #text(size: 18pt, body)
+    ])
+  ))
+]
+
+#theorem-slide(message: [
+  #box(baseline: 20%, image("/template/images/rocq-logo.svg", height: 1.2cm))
+  #h(0.4em) 40 years of *machine-checked* proofs
+])[
   #{
     let milestone(year, body) = align(center)[
       #text(weight: "bold", fill: coral, year)
@@ -347,7 +287,7 @@ By Monday morning: *€180,000* refunded, on *€40,000* of orders.]
       align: top,
       milestone[1984][Coquand and Huet start it at Inria],
       milestone[1989][First release, named *Coq*],
-      milestone[2005][The four colour theorem, checked],
+      milestone[2005][*The four colour theorem*, checked],
       milestone[2006][CompCert, a C compiler proved correct],
       milestone[2013][ACM Software System Award],
       milestone[2025][Renamed *Rocq*, after Rocquencourt],
@@ -370,19 +310,17 @@ By Monday morning: *€180,000* refunded, on *€40,000* of orders.]
     grid(
       columns: (1fr,) * 3,
       column-gutter: 0.8cm,
-      card[Types all the way][a specification is a type, \ a proof is a program of that type],
-      card[The trick, built in][a small kernel re-checks every proof],
+      card[A small kernel][de Bruijn's checker: \ it re-checks every proof],
+      card[Specs are types][a proof is a program \ of that type],
       card[Extraction][the proved program becomes \ OCaml, Haskell or Scheme],
     )
   }
 ]
 
-// The elephant in the room
 #theorem-slide[
   #align(center + horizon, image("/template/images/lean-logo.svg", width: 35%))
 ]
 
-// And many others
 #theorem-slide(message: [Many others, already *in production*])[
   #{
     let card(name, hook, body) = box(
