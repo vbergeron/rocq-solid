@@ -274,28 +274,43 @@ const [state, dispatch] = useReducer(reducer, initialState);
 #v(1em)
 A click while the request is in flight *does nothing*.
 
-== The pick list: the statement
+== The pick list: the model
 
 #rocq-file("/theories/PickList.v", lines: (7, 9), size: 0.8em)
 
 #v(0.5em)
 
-#rocq-file("/theories/PickList.v", lines: (62, 64), size: 0.8em)
+#text(size: 0.8em)[
+```rocq
+reducer : state A -> event -> state A
+init    : A -> list A -> state A
+size    : state A -> nat
+```
+]
 
 #v(0.5em)
-Replay *any* sequence of dispatched events: at least one item stays picked.
+- `init d rest` starts with `d` picked and every item of `rest` suggested
+- `size s` counts the items, picked or suggested
 
-== The pick list: the reducer
+== The pick list: the theorems
 
-#rocq-file("/theories/PickList.v", lines: (27, 41), size: 0.8em)
+#rocq-file("/theories/PickList.v", lines: (71, 72), size: 0.8em)
+
+Whatever the user clicks, *at least one item stays picked*.
+
+#v(0.8em)
+
+#rocq-file("/theories/PickList.v", lines: (106, 107), size: 0.8em)
+
+Whatever the user clicks, *no item is ever lost or duplicated*.
 
 == The pick list: the proof, one step
 
-#rocq-file("/theories/PickList.v", lines: (46, 60), size: 0.75em)
+#rocq-file("/theories/PickList.v", lines: (54, 68), size: 0.75em)
 
 == The pick list: the proof, any run
 
-#rocq-file("/theories/PickList.v", lines: (62, 70), size: 0.8em)
+#rocq-file("/theories/PickList.v", lines: (70, 80), size: 0.8em)
 
 #v(0.5em)
 One step never empties the list; *by induction*, no run ever does.
