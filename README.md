@@ -4,7 +4,10 @@ Talk and companion Rocq development. The slides use
 [Touying](https://typst-doc-cn.github.io/typst-touying-doc/)'s `metropolis`
 theme with the coral accent of
 [encore-slides](https://github.com/vbergeron/encore-slides) and
-[data-processing-at-scale](https://github.com/vbergeron/data-processing-at-scale).
+[data-processing-at-scale](https://github.com/vbergeron/data-processing-at-scale);
+published to GitHub Pages.
+
+**Site:** https://vbergeron.github.io/rocq-solid/
 
 ## Layout
 
@@ -14,6 +17,7 @@ dune-project         dune + Rocq setup (rocq-solid.opam is generated from it)
 template/lib.typ     slide template: theme, `rocq-file`, `hero`, QR slides
 template/syntaxes/   Rocq highlighting grammar (Typst bundles none)
 decks/               the talk(s), one .typ file each
+site/index.html      the GitHub Pages site listing every deck
 mise.toml            tools (Typst, opam) and tasks
 ```
 
@@ -53,10 +57,12 @@ source file, so the code on screen is the code `mise run build` checks;
 fenced ```` ```rocq ```` blocks are highlighted too. `#todo[..]` marks content
 still to write, in grey italics.
 
-Setting `slug` in `solid-theme.with(..)` adds a "Follow along" slide with QR
-codes to `https://vbergeron.github.io/rocq-solid/decks/<slug>.pdf`, which
-assumes the decks get published to GitHub Pages; entries in `links` become a
-closing "Go further" QR slide.
+`solid-theme` opens with a title slide and, if `slug` is set, a "Follow
+along" slide with two QR codes side by side: the deck's PDF
+(`https://vbergeron.github.io/rocq-solid/decks/<slug>.pdf`) and the site. It
+closes with a "Go further" slide holding a QR code for each entry in `links`.
+A new deck also needs a matching entry in the Slides list of
+`site/index.html`, linking to `decks/<slug>.pdf`.
 
 Avoid an em dash directly before a raw span (`` — `foo` ``): Touying reads it
 as a pause marker and splits the slide.
@@ -64,4 +70,7 @@ as a pause marker and splits the slide.
 ## CI
 
 `.github/workflows/build.yml` checks the proofs in the `rocq/rocq-prover:9.1`
-image and compiles the decks, uploading the PDFs as a build artifact.
+image and compiles the decks, uploading the PDFs as a build artifact. On every
+push to `main`, once both pass, it compiles every deck into `site/decks/` and
+deploys `site/` to GitHub Pages (the repository's Pages source must be set to
+"GitHub Actions").

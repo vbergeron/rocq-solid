@@ -70,8 +70,10 @@
   // "Follow along" QR codes: the deck's PDF and the site. Needs the deck
   // published at base-url + "decks/" + slug + ".pdf".
   if slug != "" {
-    slide(title: [Follow along])[
+    slide[
       #align(center + horizon)[
+        #text(size: 24pt, weight: "bold")[Follow along]
+        #v(1em)
         #grid(
           columns: (1fr, 1fr),
           column-gutter: 2cm,
@@ -86,8 +88,10 @@
   body
 
   if links.len() > 0 {
-    slide(title: [Go further])[
+    slide[
       #align(center + horizon)[
+        #text(size: 24pt, weight: "bold")[Go further]
+        #v(1em)
         #grid(
           columns: links.len() * (1fr,),
           column-gutter: 2cm,

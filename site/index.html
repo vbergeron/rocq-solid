@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rocq-solid</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            coral: { DEFAULT: '#B5303B', light: '#d4777e' },
+            anthracite: '#2d2d2d',
+            paper: '#faf8f5',
+          },
+          fontFamily: {
+            serif: ['"New Computer Modern"', '"Computer Modern Serif"', 'Georgia', 'serif'],
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    @import url('https://cdn.jsdelivr.net/gh/aaaakshat/cm-web-fonts@latest/fonts.css');
+  </style>
+</head>
+<body class="bg-paper text-anthracite font-serif antialiased">
+
+  <div class="max-w-3xl mx-auto px-6 py-16">
+
+    <!-- Header -->
+    <header class="mb-16 text-center">
+      <h1 class="text-4xl font-bold tracking-tight mb-2">Rocq-solid</h1>
+      <p class="text-lg text-gray-500">A story about vericoding</p>
+    </header>
+
+    <!-- Slides -->
+    <section class="mb-14">
+      <h2 class="text-2xl font-bold border-b-2 border-coral pb-1 mb-6">Slides</h2>
+      <ul class="space-y-1">
+        <li class="flex justify-between items-baseline">
+          <a href="decks/rocq-solid.pdf" class="hover:text-coral transition-colors">Rocq-solid — Reboot with AI</a>
+          <span class="text-xs text-gray-400 ml-2 shrink-0">PDF</span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Links -->
+    <section class="mb-14">
+      <h2 class="text-2xl font-bold border-b-2 border-coral pb-1 mb-6">Links</h2>
+      <ul class="space-y-1">
+        <li class="flex justify-between items-baseline">
+          <a href="https://rebootwithai.digitregroup.io/programme/talk-3-t2" class="hover:text-coral transition-colors">Talk abstract</a>
+          <span class="text-xs text-gray-400 ml-2 shrink-0">Reboot with AI</span>
+        </li>
+        <li class="flex justify-between items-baseline">
+          <a href="https://github.com/vbergeron/rocq-solid" class="hover:text-coral transition-colors">rocq-solid</a>
+          <span class="text-xs text-gray-400 ml-2 shrink-0">GitHub</span>
+        </li>
+        <li class="flex justify-between items-baseline">
+          <a href="https://rocq-prover.org" class="hover:text-coral transition-colors">The Rocq Prover</a>
+          <span class="text-xs text-gray-400 ml-2 shrink-0">Web</span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-center text-sm text-gray-400 border-t border-gray-200 pt-6">
+      <p>Rocq-solid &mdash; a story about vericoding</p>
+      <p class="mt-1">
+        <a href="https://github.com/vbergeron/rocq-solid" class="hover:text-coral transition-colors">Site source on GitHub</a>
+      </p>
+    </footer>
+
+  </div>
+
+</body>
+</html>
