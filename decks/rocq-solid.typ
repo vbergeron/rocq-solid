@@ -424,14 +424,6 @@ val replay : event list -> order
   ],
 )
 
-#[
-  #set text(size: 0.8em)
-  - `Inductive` becomes a *variant* (its arguments lose their names), `Record` a *record*
-    with the same fields, `list` stays a `list`
-  - `nat` becomes OCaml's `int`: that mapping, and the extraction itself, are *what we trust*
-  - Every `dune build` re-checks the proofs and *regenerates* `orders.ml`: never edited by hand
-]
-
 == Shipping it: a Kafka consumer
 
 #text(size: 0.7em)[
