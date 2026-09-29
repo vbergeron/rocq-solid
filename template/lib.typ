@@ -56,6 +56,9 @@
   show: metropolis-theme.with(
     aspect-ratio: "16-9",
     footer: self => self.info.institution,
+    config-common(
+      datetime-format: "[weekday], [month repr:long] [day padding:none], [year]",
+    ),
     config-colors(
       primary: coral,
       primary-light: coral-light,
