@@ -218,9 +218,79 @@ Writing *what you want to prove* is much easier.]
 
 #todo[a service whose business core is extracted from Rocq]
 
-== Frontend
+== Frontend: a reducer is a pure function
 
-#todo[proved client-side state logic]
+```ts
+const [state, dispatch] = useReducer(reducer, initialState);
+// reducer: (state, event) => state
+```
+
+- No I/O, no clock, no DOM: *just a function*
+- A pure function is a mathematical object: *it can be proved*
+- #link("https://github.com/vbergeron/rocqducers")[Rocqducers]: the reducer
+  is written and proved in Rocq, extracted to OCaml, compiled to JS by
+  Melange, then handed to `useReducer`
+
+== Remember the refund button?
+
+#grid(
+  columns: (auto, 1fr),
+  column-gutter: 1cm,
+  rocq-file("/theories/AsyncButton.v", lines: (5, 15), size: 0.8em),
+  [
+    #rocq-file("/theories/AsyncButton.v", lines: (17, 20), size: 0.8em)
+    #v(1em)
+    A click while the request is in flight *does nothing*.
+
+    Not a disabled button, not a guard in a handler: *a theorem*.
+  ],
+)
+
+== The pick list: the statement
+
+#rocq-file("/theories/PickList.v", lines: (7, 10), size: 0.8em)
+
+#rocq-file("/theories/PickList.v", lines: (60, 62), size: 0.8em)
+
+#v(0.5em)
+Replay *any* sequence of dispatched events: at least one item stays picked.
+
+== The pick list: the reducer
+
+#rocq-file("/theories/PickList.v", lines: (25, 39), size: 0.8em)
+
+== The pick list: the proof, one step
+
+#rocq-file("/theories/PickList.v", lines: (44, 58), size: 0.75em)
+
+== The pick list: the proof, any run
+
+#rocq-file("/theories/PickList.v", lines: (60, 68), size: 0.8em)
+
+#v(0.5em)
+One step never empties the list; *by induction*, no run ever does.
+
+== More frontend use cases
+
+#grid(
+  columns: (1fr, 1fr),
+  column-gutter: 1cm,
+  [
+    - *Undo / redo* for any reducer: Undo reverses Do, Redo reverses Undo
+      (Rocqducers' `UndoList`)
+    - *Branching history*: no edit is ever lost (`UndoTree`)
+    - *Wizards and forms*: Submit is only reachable from a valid state
+    - *Shopping cart*: the total is the sum of its lines, a promo code
+      applies once
+  ],
+  [
+    - *Permissions*: a button is shown exactly when the rule allows it
+    - *Connection and auth*: no request leaves after logout
+    - *Selection, pagination, drag and drop*: indices stay in bounds,
+      a reorder is a permutation
+    - *Optimistic updates*: a rollback restores exactly the previous state
+  ],
+)
 
 == Event-driven systems
 
