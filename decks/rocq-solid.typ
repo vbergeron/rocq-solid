@@ -14,9 +14,9 @@
 
 = A story about Jack
 
-== Meet Jack
+== Jack is a full stack engineer
 
-- Full stack engineer at a fast-growing startup
+- At a fast-growing startup
 - Twelve engineers, one product, a roadmap that doubles every quarter
 - Frontend in the morning, database migrations after lunch, on call at night
 
@@ -28,31 +28,37 @@ Claude writes the tests.
 
 CI is green. *Ship it.*]
 
-== Six good months
+== Six good months, not a single incident
 
 - Three times as many pull requests merged per week
 - Coverage above 90%, and climbing
-- Not a single incident
 
 #v(1em)
 Jack reads every diff. Well, most of them. The tests are green anyway.
 
-== What Jack did not see: a vacuous test
+== Friday, 23:47
 
-```ts
-test("a refund never exceeds what was paid", async () => {
-  const refunds = await db.refunds.findMany({ orderId: order.id });
-  for (const refund of refunds) {
-    expect(refund.amount).toBeLessThanOrEqual(order.paid);
-  }
-});
-```
+#hero[A customer notices the refund button *works more than once*.
 
-The fixture creates an order, but *no refund*. The loop never runs.
+By Monday morning: *€180,000* refunded, on *€40,000* of orders.]
 
-This test is green today, and will be green forever: *it cannot fail.*
+== Monday, 9:00: everything was green
 
-== What Jack did not see: an assumption
+- Every test was green
+- Every pull request was reviewed and approved
+- The code did exactly what it said
+
+#v(1em)
+#align(center)[*So how did €140,000 walk out the door?*]
+
+== Three weeks earlier, support asked for partial refunds
+
+- One button, one click per refund
+- Claude adds the button; each click stores a new `Refund`
+- `order.refund` now points to the latest one
+- `refundable` still subtracts a single refund: all tests pass
+
+== "An order is refunded at most once"
 
 ```ts
 type Order = {
@@ -68,27 +74,28 @@ Nobody said an order is refunded at most once.
 
 Claude *guessed*, it read well, and the guess became the domain model.
 
-== Then the product moves
+== The test that could never fail
 
-- Support asks for *partial refunds*: one button, one click per refund
-- Claude adds the button; each click stores a new `Refund`
-- `order.refund` now points to the latest one
-- `refundable` still subtracts a single refund: all tests pass
+```ts
+test("a refund never exceeds what was paid", async () => {
+  const refunds = await db.refunds.findMany({ orderId: order.id });
+  for (const refund of refunds) {
+    expect(refund.amount).toBeLessThanOrEqual(order.paid);
+  }
+});
+```
 
-== Friday, 23:47
+The fixture creates an order, but *no refund*. The loop never runs.
 
-#hero[A customer notices the refund button *works more than once*.
+This test was green on day one, and will be green forever.
 
-By Monday morning: *€180,000* refunded, on *€40,000* of orders.]
+== Nobody had written down what must be true
 
-== The post-mortem
+#hero[The rule was in everyone's head.
 
-- Every test was green
-- Every pull request was reviewed and approved
-- The code did exactly what it said
+It was in the name of a test.
 
-#v(1em)
-#align(center)[*Nobody had written down what must be true.*]
+*It was never checked.*]
 
 = Doubting our guarantees
 
