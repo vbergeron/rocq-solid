@@ -368,11 +368,7 @@ One step never empties the list; *by induction*, no run ever does.
   column-gutter: 1cm,
   [
     #rocq-file("/theories/Orders.v", lines: (7, 15), size: 0.75em)
-    #text(size: 0.75em)[
-```rocq
-handle : order -> event -> order
-```
-    ]
+    #rocq-file("/theories/Orders.v", lines: (23, 23), size: 0.75em)
     #rocq-file("/theories/Orders.v", lines: (37, 39), size: 0.75em)
   ],
   [
@@ -403,28 +399,37 @@ An event delivered twice is *counted once*.
 
 #rocq-file("/extraction/OrdersExtraction.v", lines: (4, 7), size: 0.65em)
 
-#text(size: 0.6em)[
+#grid(
+  columns: (1fr, 1.1fr),
+  column-gutter: 0.8cm,
+  align: top,
+  [
+    #text(size: 0.6em, fill: luma(120))[Rocq: `theories/Orders.v`]
+    #rocq-file("/theories/Orders.v", lines: (7, 15), size: 0.62em)
+  ],
+  [
+    #text(size: 0.6em, fill: luma(120))[OCaml: `orders.mli`, written by `dune build`]
+    #text(size: 0.62em)[
 ```ocaml
-(* orders.ml, written by dune build *)
-let handle o e =
-  if already_seen o e
-  then o
-  else let seen' = (event_id e) :: o.seen in
-       (match e with
-        | Paid (_, n) ->
-          { seen = seen'; paid = (add o.paid n); refunded = o.refunded }
-        | Refunded (_, n) ->
-          if (<=) (add o.refunded n) o.paid
-          then { seen = seen'; paid = o.paid; refunded = (add o.refunded n) }
-          else { seen = seen'; paid = o.paid; refunded = o.refunded })
+type event =
+| Paid of int * int
+| Refunded of int * int
+
+type order = { seen : int list; paid : int; refunded : int }
+
+val handle : order -> event -> order
+val replay : event list -> order
 ```
-]
+    ]
+  ],
+)
 
 #[
   #set text(size: 0.8em)
-  - Every `dune build` re-checks the proofs, *regenerates* `orders.ml` and compiles it
-  - The OCaml is generated, *never edited*: the code that ships is the code that was proved
-  - What we trust: Rocq's extraction, and `nat` mapped to OCaml's `int`
+  - `Inductive` becomes a *variant* (its arguments lose their names), `Record` a *record*
+    with the same fields, `list` stays a `list`
+  - `nat` becomes OCaml's `int`: that mapping, and the extraction itself, are *what we trust*
+  - Every `dune build` re-checks the proofs and *regenerates* `orders.ml`: never edited by hand
 ]
 
 == Shipping it: a Kafka consumer
