@@ -214,10 +214,6 @@ Writing *what you want to prove* is much easier.]
 
 #todo[extraction: from Rocq to a production language]
 
-== Backend
-
-#todo[a service whose business core is extracted from Rocq]
-
 == Frontend: a reducer is a pure function
 
 ```ts
