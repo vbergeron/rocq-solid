@@ -14,44 +14,58 @@
 
 = A story about Jack
 
-#let jack-slide = message-slide.with(title: [A story about Jack])
-
-#jack-slide(message: [Meet Jack, full stack and *never enough time*])[
+== A story about Jack
+  #grid(
+    columns: (2fr, 1fr),
+    text[
+  - Full stack developer at a small e-shop startup
   - Twelve engineers, one product, a roadmap that doubles every quarter
   - Frontend in the morning, database migrations after lunch, on call at night
-]
+    ],
+    image("images/engineer.webp", width: 80%)
+  )
 
-#jack-slide(message: [Jack *loves* Claude])[
+== A story about Jack
   #hero[Claude writes the feature.
 
   Claude writes the tests.
 
-  CI is green. *Ship it.*]
-]
+  Jack *loves* Claude]
 
-#jack-slide(message: [Six months, *not a single incident*])[
-  - Three times as many pull requests merged per week
-  - Coverage above 90%, and climbing
+== A story about Jack
+  #grid(
+    columns: (2fr, 1fr),
+    text[The past 9 months have been a *blast* !
+    - Three times as many pull requests merged per week
+    - Coverage above 90%, and climbing],
+    image("images/klod.jpg", width: 80%)
+  )
 
   #v(1em)
-  Jack reads every diff. Well, most of them. The tests are green anyway.
-]
+  Jack reads every diff. Well, most of them. _The tests are green anyway_.
 
-#jack-slide(message: [What Jack missed: a test that *cannot fail*])[
-  ```ts
-  test("a refund never exceeds what was paid", async () => {
-    const refunds = await db.refunds.findMany({ orderId: order.id });
-    for (const refund of refunds) {
-      expect(refund.amount).toBeLessThanOrEqual(order.paid);
-    }
-  });
-  ```
 
-  The fixture creates an order, but *no refund*: the loop never runs.
-  Green today, green forever.
-]
+== A story about Jack
+Friday, 10h00.
 
-#jack-slide(message: [What Jack missed: a rule *nobody stated*])[
+Product asks for *partial refunds*: one button, one click per refund.
+
+Claude do the job from the front to the DB.
+
+Tests are still green
+
+== A story about Jack
+Friday, 22h57.
+
+A customer notices the refund button *works more than once*.
+
+
+== A story about Jack
+Monday, 08h43
+
+*€180,000* refunded, on *€40* of orders.
+
+== A story about Jack
   ```ts
   type Order = {
     id: OrderId;
@@ -61,209 +75,148 @@
 
   const refundable = (o: Order) => o.paid - (o.refund?.amount ?? 0);
   ```
-
+/*
   "At most once" was never asked for. Claude *guessed*, it read well,
   and the guess became the domain model.
-]
+*/
 
-#jack-slide(message: [The product moves. *The tests don't.*])[
-  - Support asks for *partial refunds*: one button, one click per refund
-  - Claude adds the button; each click stores a new `Refund`
-  - `order.refund` now points to the latest one
-  - `refundable` still subtracts a single refund: all tests pass
-]
+== A story about Jack
+  ```ts
+  test("a refund never exceeds what was paid", async () => {
+    const refunds = await db.refunds.findMany({ orderId: order.id });
+    for (const refund of refunds) {
+      expect(refund.amount).toBeLessThanOrEqual(order.paid);
+    }
+  });
+  ```
 
-#jack-slide(message: [Friday, *23:47*])[
-  #hero[A customer notices the refund button *works more than once*.
-
-  By Monday morning: *€180,000* refunded, on *€40,000* of orders.]
-]
-
-#jack-slide(message: [Nobody had written down *what must be true*])[
+== A story about Jack
   *The post-mortem*
   - Every test was green
   - Every pull request was reviewed and approved
   - The code did exactly what it said
-]
 
-= Doubting our guarantees
+But nobody wrote down what must be true.
 
-== The question
+= It's all about proofs and trust
 
-#hero[Tests and types are supposed to protect us from bugs.
+== Yes obviously some guys in the 17th century have tought about it
 
-*But who checks that those guarantees actually hold?*]
+#grid(
+  columns: (1fr, 2.5fr),
+  rows: (1fr, 1fr),
+  gutter: 10pt,
+  inset: 12pt,
+  align: left + horizon,
 
-== What tests guarantee
+  [*Rationalists* \ #text(size: 14pt)[Descartes, Spinoza, Leibniz]],
+  [
+    - Knowledge comes from *reason* (innate ideas, deduction)
+    - Model: *mathematical proof*
+    - Limit: can pure reason tell us about the world?
+  ],
 
-- Examples, not properties
-- #todo[a bug that gets through a green test suite]
+  [*Empiricists* \ #text(size: 14pt)[Locke, Berkeley, Hume]],
+  [
+    - Knowledge comes from *experience* (mind as _tabula rasa_)
+    - Model: *experience and deductions*
+    - Limit: no amount of observation yields certainty
+  ],
+)
 
-== What types guarantee
+== Collatz: evidence without proof
 
-- The shape of data, rarely its meaning
-- #todo[an invariant the type system cannot see]
+#set text(size: 17pt)
 
-== The urgency
+#grid(
+  columns: (1.3fr, 1fr),
+  gutter: 20pt,
+  align: horizon,
+  [
+    *The rule:* take any $n$. If even, $n -> n/2$; if odd, $n -> 3n+1$. Repeat.
 
-#hero[AI agents write code *faster than we can review it*.]
+    *Conjecture (Collatz, 1937):* you always end up at 1.
 
-#todo[numbers or an anecdote: generated code volume vs. review capacity]
+    #text(size: 15pt)[$6 -> 3 -> 10 -> 5 -> 16 -> 8 -> 4 -> 2 -> 1$]
+
+    - Checked for every $n$ up to $2^71 approx 2.36 times 10^21$ (Barina, 2025)
+    - Still no proof
+
+    #block(fill: luma(240), inset: 8pt, radius: 4pt)[
+      Billions of billions of cases ≠ certainty: the next number could be the exception.
+    ]
+  ],
+  image("images/collatz.png", width: 100%, height: 80%, fit: "contain"),
+)
+
+== Reason alone: truths no experiment can reach
+
+#set text(size: 16pt)
+
+#grid(
+  columns: (2fr, 1fr),
+  rows: (1fr, 1fr, auto),
+  gutter: 14pt,
+  align: horizon,
+  [
+    *There are infinitely many primes* (Euclid, c. 300 BCE) \
+    Suppose the list is finite: $p_1, ..., p_n$. Then $N = p_1 p_2 dots.c p_n + 1$ leaves remainder 1 when divided by each $p_i$, so its prime factors are missing from the list. Contradiction.
+  ],
+  image("images/ulam.jpg", height: 100%),
+  [
+    *$sqrt(2)$ is irrational* (Pythagoreans, 5th c. BCE) \
+    Suppose $sqrt(2) = p/q$ in lowest terms. Then $p^2 = 2q^2$, so $p$ is even: $p = 2k$. Then $q^2 = 2k^2$, so $q$ is even too. Contradiction.
+  ],
+  image("images/sqrt2.webp", height: 100%),
+)
 
 = Theorem provers
+
+== The Four Colour Theorem: a proof no human can read
+
+#set text(size: 15pt)
+
+#grid(
+  columns: (1.6fr, 1fr),
+  gutter: 20pt,
+  align: horizon,
+  [
+    _Any map can be coloured with 4 colours so that neighbouring regions differ._
+
+    #table(
+      columns: (auto, 1fr),
+      inset: 6pt,
+      align: left + horizon,
+      stroke: none,
+      [*1879*], [Kempe publishes a "proof", accepted for 11 years],
+      [*1890*], [Heawood finds the flaw: back to square one],
+      [*1976*], [Appel & Haken: a computer checks ~1,900 cases in over 1,000 hours],
+      [*1996*], [Robertson, Sanders, Seymour & Thomas: a simpler proof, still computer-assisted],
+      [*2005*], [Gonthier verifies the full proof in the Coq proof assistant],
+    )
+
+    #block(fill: luma(240), inset: 8pt, radius: 4pt)[
+      *The question:* if no human can check it, is it still a proof? Do we _know_ the theorem, or do we _trust_ the machine?
+    ]
+  ],
+  image("images/4color.png", width: 100%, height: 100%, fit: "contain"),
+)
+
+== Curry–Howard: proofs are programs
+
+  *Theorem (Curry 1934–1958, Howard 1969).* 
+  
+  Proofs in intuitionistic logic are exactly the programs of the typed $lambda$-calculus: \ 
+  a proposition is provable if and only if the corresponding type has a program.
+
+  Checking a proof = checking a program's type
+
 
 // These slides keep the section's name in the header and put their
 // message in the body, large, where it is read. They tell one story:
 // examples cannot establish a truth, a proof can, and the hard part is
 // checking the proof, until a machine does it.
 #let theorem-slide = message-slide.with(title: [Theorem provers])
-
-// Evidence is not proof.
-#theorem-slide(message: [906 million green tests. *Still false.*])[
-  #grid(
-    columns: (1fr, 1fr),
-    column-gutter: 1.2cm,
-    align: horizon,
-    text(size: 22pt)[
-      *Pólya, 1919*: up to any number, at least half of the numbers have an
-      *odd* number of prime factors.
-
-      #v(0.5em)
-      Believed for *39 years*.
-    ],
-    {
-      set text(font: "Fira Code", size: 15pt, fill: luma(230))
-      let ok = text(fill: rgb("#7cc47f"))[✓]
-      block(fill: rgb("#23373b"), radius: 6pt, inset: 1em, width: 100%)[
-        #ok n = 2 \
-        #ok n = 3 \
-        #ok n = 4 \
-        #text(fill: luma(140))[  … 906 150 250 more …] \
-        #ok n = 906 150 256 \
-        #text(fill: coral-light, weight: "bold")[✗ n = 906 150 257]
-      ]
-    },
-  )
-
-  #v(1em)
-  #align(center)[
-    _"Testing can show the presence of bugs, never their absence."_ \
-    #text(size: 0.7em, fill: luma(120))[Edsger W. Dijkstra]
-  ]
-]
-
-// A proof covers every case; checking one is the hard part.
-#theorem-slide(message: [A proof covers every case. *Who checks it?*])[
-  #let caption(body) = text(size: 14pt, fill: luma(120), body)
-  #grid(
-    columns: (1fr, 1fr),
-    column-gutter: 1.5cm,
-    row-gutter: 0.6em,
-    align: (x, y) => center + if y == 0 { horizon } else { top },
-    rows: (3.2cm, auto),
-    text(size: 20pt)[_"When there are disputes, we can simply say:
-      *let us calculate*, to see who is right."_],
-    text(size: 60pt, weight: "bold", fill: coral)[$1 + 1 = 2$],
-    caption[Leibniz, 1685: the dream],
-    caption[_Principia Mathematica_, 1910, page 379: the price],
-  )
-
-  #v(1em)
-  #align(center, text(size: 22pt)[
-    Every step is mechanical, and there are thousands:
-    *a job for a machine*.
-  ])
-]
-
-// The machine enters, and trust breaks.
-#theorem-slide(message: [1976: the machine proves. *Nobody can check.*])[
-  #grid(
-    columns: (1.4fr, 1fr),
-    column-gutter: 1.5cm,
-    align: horizon,
-    text(size: 22pt)[
-      Any map can be coloured with *four colours*, no two neighbours alike.
-
-      #v(0.5em)
-      The proof takes *1,200 hours* of computation, and no human can
-      follow it.
-
-      #v(0.5em)
-      Mathematicians split: *is it still a proof?*
-    ],
-    {
-      let (r, b, g, y) = (
-        coral.lighten(25%), rgb("#4a7c8c"), rgb("#7aa36b"), rgb("#e8b04a"),
-      )
-      let region(c, span: 1) = grid.cell(colspan: span, fill: c)[]
-      grid(
-        columns: (1fr,) * 4,
-        rows: (2.2cm,) * 3,
-        stroke: 3pt + white,
-        region(r, span: 2), region(b), region(g),
-        region(b), region(g, span: 2), region(y),
-        region(y, span: 3), region(b),
-      )
-    },
-  )
-]
-
-// The way out: a small, trusted checker.
-#theorem-slide(message: [The way out: trust *only the checker*])[
-  #align(center)[
-    #{
-      let ink = rgb("#23373b")
-      let stage(name, note, fill: luma(240)) = box(
-        width: 6cm,
-        fill: fill,
-        radius: 6pt,
-        inset: (y: 0.8em),
-        align(center)[
-          #text(weight: "bold", fill: ink, name) \
-          #text(size: 0.7em, fill: luma(100), note)
-        ],
-      )
-      let arrow = text(size: 1.4em, fill: luma(150))[$arrow.long$]
-      grid(
-        columns: 5,
-        column-gutter: 0.5em,
-        align: horizon,
-        stage[Anyone][a person, a program],
-        arrow,
-        stage[A proof][every step written out],
-        arrow,
-        stage(fill: coral.lighten(88%))[A small checker][short enough to read],
-      )
-    }
-
-    #v(1.2em)
-    #text(size: 22pt)[
-      Who wrote the proof, and how, *no longer matters*.
-    ]
-
-    #text(size: 14pt, fill: luma(120))[Nicolaas de Bruijn, 1967]
-  ]
-]
-
-// The payoff: what humans could not check, machines now do.
-#theorem-slide(message: [Since then, machines check what *humans cannot*])[
-  #align(center, grid(
-    columns: (1fr,) * 3,
-    column-gutter: 1cm,
-    align: center + top,
-    ..(
-      ([1994], [The Pentium divides wrong, past every test:
-        *\$475 million*. Chip makers start proving their arithmetic]),
-      ([2005], [The four colour theorem, checked *end to end*.
-        The debate is over]),
-      ([2014], [Kepler's conjecture: the referees were _"99% certain"_.
-        The machine is *sure*]),
-    ).map(((year, body)) => [
-      #text(size: 36pt, weight: "bold", fill: coral, year) \
-      #text(size: 18pt, body)
-    ])
-  ))
-]
 
 #theorem-slide(message: [
   #box(baseline: 20%, image("/template/images/rocq-logo.svg", height: 1.2cm))
@@ -291,26 +244,6 @@
   }
 
   #v(0.8em)
-  #{
-    let card(title, body) = box(
-      width: 100%,
-      height: 2.6cm,
-      fill: luma(240),
-      radius: 6pt,
-      inset: 0.7em,
-      align(center + horizon)[
-        #text(weight: "bold", title) \
-        #text(size: 0.7em, fill: luma(80), body)
-      ],
-    )
-    grid(
-      columns: (1fr,) * 3,
-      column-gutter: 0.8cm,
-      card[A small kernel][de Bruijn's checker: \ it re-checks every proof],
-      card[Specs are types][a proof is a program \ of that type],
-      card[Extraction][the proved program becomes \ OCaml, Haskell or Scheme],
-    )
-  }
 ]
 
 #theorem-slide[
