@@ -235,7 +235,7 @@ const [state, dispatch] = useReducer(reducer, initialState);
 
 #rocq-file("/theories/AsyncButton.v", lines: (5, 15))
 
-== The refund button: the proof
+== Remember the refund button?
 
 #rocq-file("/theories/AsyncButton.v", lines: (17, 20))
 
