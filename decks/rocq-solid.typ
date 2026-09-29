@@ -344,9 +344,79 @@ One step never empties the list; *by induction*, no run ever does.
 
 #todo[event handlers and projection invariants]
 
-== Embedded firmware
+== Embedded firmware: the device is a state machine
 
-#todo[proved code on a constrained target]
+#grid(
+  columns: (1.1fr, 1fr),
+  column-gutter: 1cm,
+  [
+    #text(size: 0.75em)[
+```rocq
+step : State * Event -> State * list Effect
+
+Inductive Event :=     (* polled by the host *)
+  | InApdu (bytes : Bytes)
+  | ApprovedTx
+  | RejectedTx.
+
+Inductive Effect :=    (* performed by the host *)
+  | OutApdu (bytes : Bytes)
+  | DisplayProps (to value : Bytes).
+```
+    ]
+  ],
+  [
+    #set text(size: 0.85em)
+    - The whole firmware is *one pure function*, written and proved in Rocq
+    - The host only *polls events* and *performs effects*: a thin layer that
+      stays the same size as the app grows
+    - The Gallina itself runs on a Cortex-M, in the *Encore!* VM: what runs is
+      what was proved
+  ],
+)
+
+#v(0.5em)
+#text(size: 0.7em)[
+  _From Rocq to Metal: A Pipeline for Formally Verified Microcontroller
+  Firmware_, AIMACS \@ CAV 2026:
+  #link("https://github.com/vbergeron/from-rocq-to-metal")[github.com/vbergeron/from-rocq-to-metal]
+  · Encore!: #link("https://github.com/vbergeron/encore")[github.com/vbergeron/encore]
+]
+
+== Embedded firmware: pull the plug, anywhere
+
+#text(size: 0.8em)[
+```rocq
+Theorem power_cut_safe : forall f r c i,
+  Inv f -> progress f (boot (apply_all f (firstn i (effects f r c)))).
+```
+]
+
+#{
+  set text(size: 0.75em)
+  grid(
+    columns: (auto, 1fr),
+    column-gutter: 0.8cm,
+    row-gutter: 0.6em,
+    align: top,
+    [`forall f r c i`], [For every flash state, download in progress, command, and cut point],
+    [`Inv f`], [If the device boots a valid image, not below the anti-rollback counter],
+    [`firstn i (effects ...)`], [and the power dies after only the first `i` flash writes of the command],
+    [`boot (...)`], [then, once the bootloader has run,],
+    [`progress f ...`], [the device *still boots a valid image*, and neither the installed version
+      nor the anti-rollback counter *ever went down*.],
+  )
+}
+
+#v(0.4em)
+The proof even pins down the order of two writes: raise the counter before
+clearing the trial flag, cut in between, and the device *reverts to an image
+below the counter*.
+
+#text(size: 0.7em)[
+  A/B firmware update, MCUboot style:
+  #link("https://github.com/vbergeron/encore-benchmarks/tree/main/workloads/w5_update")[encore-benchmarks, workload W5]
+]
 
 == What it changes in your architecture
 
