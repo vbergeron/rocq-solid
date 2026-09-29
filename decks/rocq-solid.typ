@@ -340,9 +340,43 @@ One step never empties the list; *by induction*, no run ever does.
   ],
 )
 
-== Event-driven systems
+== Event processing: an order is a list of events
 
-#todo[event handlers and projection invariants]
+#grid(
+  columns: (1.1fr, 1fr),
+  column-gutter: 1cm,
+  [
+    #rocq-file("/theories/Orders.v", lines: (7, 15), size: 0.75em)
+    #text(size: 0.75em)[
+```rocq
+handle : order -> event -> order
+```
+    ]
+    #rocq-file("/theories/Orders.v", lines: (37, 39), size: 0.75em)
+  ],
+  [
+    #set text(size: 0.85em)
+    - Every change is an *event*: a payment, a refund
+    - The order is *replayed* from its events, one `handle` at a time
+    - Queues deliver *at least once*: the same event can arrive *twice*
+    - `handle` is a pure function: proved in Rocq, called by the consumer
+  ],
+)
+
+== Event processing: Jack's refunds, proved
+
+#rocq-file("/theories/Orders.v", lines: (51, 52), size: 0.8em)
+
+Whatever events arrive, in whatever order: *never more refunded than paid*.
+
+#v(0.8em)
+
+#rocq-file("/theories/Orders.v", lines: (61, 62), size: 0.8em)
+
+An event delivered twice is *counted once*.
+
+#v(0.8em)
+#align(center)[Friday, 23:47 *cannot happen*.]
 
 == Embedded firmware: the device is a state machine
 
