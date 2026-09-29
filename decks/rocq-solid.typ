@@ -260,10 +260,8 @@ const [state, dispatch] = useReducer(reducer, initialState);
 }
 
 #v(0.8em)
-#align(center)[
-  *Rocqducers*:
-  #link("https://github.com/vbergeron/rocqducers")[github.com/vbergeron/rocqducers]
-]
+*Rocqducers*:
+#link("https://github.com/vbergeron/rocqducers")[github.com/vbergeron/rocqducers]
 
 == Remember the refund button?
 
