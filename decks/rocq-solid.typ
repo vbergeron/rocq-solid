@@ -225,7 +225,8 @@ const [state, dispatch] = useReducer(reducer, initialState);
 // reducer: (state, event) => state
 ```
 
-- A reducer is a *pure function*
+- Same state, same event: *same next state*, and no side effects
+- React counts on it: in Strict Mode, it calls your reducer *twice*
 
 #v(0.5em)
 #{
