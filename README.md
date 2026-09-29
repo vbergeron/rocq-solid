@@ -60,7 +60,9 @@ decks/rocq-solid.typ`.
 Each `= Section` opens a section slide and each `== Title` a new slide.
 `rocq-file("/theories/Intro.v", lines: (20, 25))` shows a range of a checked
 source file, so the code on screen is the code `mise run build` checks;
-fenced ```` ```rocq ```` blocks are highlighted too. `#todo[..]` marks content
+fenced ```` ```rocq ```` blocks are highlighted too.
+`message-slide(title: [Section], message: [..])[..]` keeps the section's name
+in the header and opens the body with the slide's message, large. `#todo[..]` marks content
 still to write, in grey italics.
 
 `solid-theme` opens with a title slide and, if `slug` is set, a "Follow

@@ -13,6 +13,21 @@
 
 #let hero(body) = align(center + horizon, text(size: 28pt, body))
 
+// A slide whose header carries `title` (e.g. the section's name) and whose
+// body opens with `message`, large: the one thing the slide must say.
+#let message-slide(title: none, message: none, body) = slide(
+  title: title,
+  align: top,
+)[
+  #if message != none {
+    v(0.3em)
+    text(size: 30pt, weight: "bold", fill: rgb("#23373b"), message)
+  }
+  #v(1fr)
+  #body
+  #v(1fr)
+]
+
 // Placeholder for slide content still to write.
 #let todo(body) = text(fill: luma(140), style: "italic")[TODO: #body]
 
