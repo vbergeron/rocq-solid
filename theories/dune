@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Solid)
+ (package rocq-solid)
+ (theories Stdlib))

@@ -1,0 +1,2 @@
+; Rocq sources. The slides live in template/ and decks/ and are built by Typst.
+(dirs theories)

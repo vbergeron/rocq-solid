@@ -1,0 +1,11 @@
+# dune / opam
+_build/
+_opam/
+*.install
+.lia.cache
+.nia.cache
+
+# typst
+*.pdf
+.typst-cache/
+site/decks/

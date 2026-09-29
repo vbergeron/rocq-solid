@@ -1,0 +1,47 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  rocq:
+    name: Rocq proofs
+    runs-on: ubuntu-24.04
+    # Prebuilt Rocq instead of `mise run setup`, which compiles Rocq from
+    # source. The image's opam switch belongs to its uid 1000 user, but
+    # actions/checkout needs root: run as root, build as that user.
+    container:
+      image: rocq/rocq-prover:9.1
+      options: --user root
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - name: dune build
+        run: |
+          user="$(getent passwd 1000 | cut -d: -f1)"
+          chown -R "$user" "$GITHUB_WORKSPACE"
+          su "$user" -s /bin/bash -c "cd '$GITHUB_WORKSPACE' && eval \"\$(opam env)\" && rocq --version && dune build"
+      - name: Generated opam file is up to date
+        run: git -c safe.directory='*' diff --exit-code -- rocq-solid.opam
+
+  slides:
+    name: Slides
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jdx/mise-action@v2
+        with:
+          install_args: typst
+      - name: Compile all decks
+        run: mise run slides-all
+      - uses: actions/upload-artifact@v4
+        with:
+          name: decks
+          path: site/decks/*.pdf
