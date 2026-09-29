@@ -229,25 +229,30 @@ const [state, dispatch] = useReducer(reducer, initialState);
 
 #v(0.5em)
 #{
-  let stage(name, note) = box(
-    stroke: 1pt + coral,
-    radius: 4pt,
-    inset: (x: 0.6em, y: 0.5em),
-    align(center)[*#name* \ #text(size: 0.7em, fill: luma(110), note)],
+  let ink = rgb("#23373b")
+  let stage(name, note, fill: luma(240)) = box(
+    width: 4.4cm,
+    fill: fill,
+    radius: 6pt,
+    inset: (y: 0.6em),
+    align(center)[
+      #text(weight: "bold", fill: ink, name) \
+      #text(size: 0.65em, fill: luma(100), note)
+    ],
   )
-  let step(label) = align(center + horizon)[
-    #text(size: 0.6em, fill: luma(110), label) \
-    #text(fill: coral, size: 1.2em)[$arrow.long$]
+  let step(label) = align(center)[
+    #text(size: 0.55em, style: "italic", fill: luma(120), label) \
+    #text(size: 1.1em, fill: luma(150))[$arrow.long$]
   ]
   align(center, grid(
     columns: 7,
-    column-gutter: 0.4em,
+    column-gutter: 0.3em,
     align: horizon,
-    stage[Rocq][reducer + proofs],
+    stage(fill: coral.lighten(88%))[Rocq][reducer + proofs],
     step[extraction],
     stage[OCaml][extracted code],
     step[Melange],
-    stage[JS][ES module],
+    stage[JavaScript][ES module],
     step[import],
     stage[React][`useReducer`],
   ))
