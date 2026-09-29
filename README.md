@@ -18,7 +18,8 @@ dune-project         dune + Rocq setup (rocq-solid.opam is generated from it)
 template/lib.typ     slide template: theme, `rocq-file`, `hero`, QR slides
 template/syntaxes/   Rocq highlighting grammar (Typst bundles none)
 template/fonts/      Fira Code (OFL) for code, with its ligatures
-template/images/     logos (lean-logo.svg: from leanprover/vscode-lean4, Apache-2.0)
+template/images/     logos: rocq-logo.svg (rocq-prover.org, Unlicense),
+                     lean-logo.svg (leanprover/vscode-lean4, Apache-2.0)
 decks/               the talk(s), one .typ file each
 site/index.html      the GitHub Pages site listing every deck
 mise.toml            tools (Typst, opam) and tasks
