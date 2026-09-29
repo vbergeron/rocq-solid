@@ -50,6 +50,9 @@
 ) = {
   // Typst bundles no Rocq grammar; this one answers to `coq`, `rocq` and `v`.
   set raw(syntaxes: "syntaxes/rocq.sublime-syntax")
+  // Fira Code, vendored in template/fonts/ (compile with --font-path
+  // template/fonts): its ligatures turn -> into an arrow, /\ into a wedge.
+  show raw: set text(font: "Fira Code")
   show: metropolis-theme.with(
     aspect-ratio: "16-9",
     footer: self => self.info.institution,

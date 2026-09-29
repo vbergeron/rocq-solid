@@ -37,18 +37,18 @@ run = "opam env --switch=. --set-switch"
 [tasks.slides]
 description = "Compile a deck to <stem>.pdf"
 usage = 'arg "[file]" default="{{vars.deck}}"'
-run = 'typst compile --root . "${usage_file}" "$(basename "${usage_file%.typ}").pdf"'
+run = 'typst compile --root . --font-path template/fonts "${usage_file}" "$(basename "${usage_file%.typ}").pdf"'
 
 [tasks.watch]
 description = "Live-recompile a deck while editing"
 usage = 'arg "[file]" default="{{vars.deck}}"'
-run = 'typst watch --root . "${usage_file}" "$(basename "${usage_file%.typ}").pdf"'
+run = 'typst watch --root . --font-path template/fonts "${usage_file}" "$(basename "${usage_file%.typ}").pdf"'
 
 [tasks.slides-all]
 description = "Compile every deck into site/decks/"
 run = '''
 mkdir -p site/decks
 for f in decks/*.typ; do
-  typst compile --root . "$f" "site/decks/$(basename "${f%.typ}").pdf"
+  typst compile --root . --font-path template/fonts "$f" "site/decks/$(basename "${f%.typ}").pdf"
 done
 '''

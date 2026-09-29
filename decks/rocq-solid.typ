@@ -391,26 +391,22 @@ Inductive cmd :=
 
 == Embedded firmware: no free retries
 
-#text(size: 0.8em)[
-```rocq
-Theorem tries_up_only_with_secret : forall s c,
-  tries s < tries (fst (step s c)) ->
-  (exists g, c = Verify g /\ g = pin s /\ 0 < tries s) \/
-  (exists k p, c = Unblock k p /\ k = puk s /\ 0 < puk_tries s).
-```
-]
+#rocq-file("/theories/Pin.v", lines: (91, 92), size: 0.8em)
 
 #{
-  set text(size: 0.75em)
+  let def(from, to, body) = (
+    block(rocq-file("/theories/Pin.v", lines: (from, to), size: 0.65em)),
+    text(size: 0.75em, body),
+  )
   grid(
     columns: (auto, 1fr),
     column-gutter: 0.8cm,
-    row-gutter: 0.6em,
-    align: top,
-    [`forall s c`], [Whatever state the card is in, whatever command it receives:],
-    [`tries s < tries (...)`], [if the number of PIN attempts left *goes up*,],
-    [`c = Verify g /\ g = pin s`], [then the command was *the right PIN*, while the card was not blocked,],
-    [`c = Unblock k p /\ k = puk s`], [or *the right PUK*, while the PUK was not blocked.],
+    row-gutter: 0.5em,
+    align: horizon,
+    ..def(76, 77)[The number of PIN attempts left *goes up*],
+    ..def(79, 80)[The command is *the right PIN*, and the card is not blocked],
+    ..def(82, 83)[The command is *the right PUK*, and the PUK is not blocked],
+    ..def(85, 86)[One or the other],
   )
 }
 
