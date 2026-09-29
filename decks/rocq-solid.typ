@@ -494,32 +494,19 @@ Inductive cmd :=
   · Encore!: #link("https://github.com/vbergeron/encore")[github.com/vbergeron/encore]
 ]
 
-== Embedded firmware: no free retries
+== Embedded firmware: what the card guarantees
 
-#{
-  let def(from, to, body) = (
-    block(rocq-file("/theories/Pin.v", lines: (from, to), size: 0.65em)),
-    text(size: 0.75em, body),
-  )
-  grid(
-    columns: (auto, 1fr),
-    column-gutter: 0.8cm,
-    row-gutter: 0.5em,
-    align: horizon,
-    ..def(76, 77)[The state of the card *after* the command (`step` also returns an answer)],
-    ..def(79, 80)[The number of PIN attempts left *goes up*],
-    ..def(82, 83)[The command is *the right PIN*, and the card is not blocked],
-    ..def(85, 86)[The command is *the right PUK*, and the PUK is not blocked],
-  )
-}
+#rocq-file("/theories/Pin.v", lines: (96, 97), size: 0.8em)
 
-#v(0.3em)
-#rocq-file("/theories/Pin.v", lines: (91, 92), size: 0.8em)
+The card *only unlocks with the right PIN*.
 
-#v(0.4em)
-No sequence of commands gives an attacker *free attempts* at your PIN. And once
-both counters reach zero, the card stays *locked forever*: that is proved too.
+#v(0.8em)
 
+#rocq-file("/theories/Pin.v", lines: (109, 110), size: 0.8em)
+
+A card blocked for good *stays blocked*, whatever you send it.
+
+#v(0.8em)
 #text(size: 0.7em)[
   PIN and PUK logic of a SIM card:
   #link("https://github.com/vbergeron/encore-benchmarks/tree/main/workloads/w4_pin")[encore-benchmarks, workload W4]
