@@ -50,7 +50,7 @@ Friday, 10h00.
 
 Product asks for *partial refunds*: one button, one click per refund.
 
-Claude do the job from the front to the DB.
+Claude does the job from the front to the DB.
 
 Tests are still green
 
@@ -100,7 +100,7 @@ But nobody wrote down what must be true.
 
 = It's all about proofs and trust
 
-== Yes obviously some guys in the 17th century have tought about it
+== Yes obviously some guys in the 17th century have thought about it
 
 #grid(
   columns: (1fr, 2.5fr),
