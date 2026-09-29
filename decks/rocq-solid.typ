@@ -274,28 +274,6 @@ const [state, dispatch] = useReducer(reducer, initialState);
 #v(1em)
 A click while the request is in flight *does nothing*.
 
-== Wiring it into React
-
-```ocaml
-(* rocqducers/lib/Hooks.ml: a React hook around the extracted reducer *)
-let use_safe_async_button () =
-  let (state, dispatch) =
-    use_reducer Extracted.AsyncButton.reducer Extracted.AsyncButton.Idle in
-  [%mel.obj
-    { isLoading = state = Extracted.AsyncButton.Loading
-    ; click     = (fun () -> dispatch Extracted.AsyncButton.Click)
-    ; succeed   = (fun () -> dispatch Extracted.AsyncButton.Success)
-    ; fail      = (fun () -> dispatch Extracted.AsyncButton.Failure) }]
-```
-
-#v(0.5em)
-
-```js
-import { use_safe_async_button } from "@rocqducers/lib/Hooks.js";
-
-const { isLoading, click, succeed, fail } = use_safe_async_button();
-```
-
 == The pick list: the statement
 
 #rocq-file("/theories/PickList.v", lines: (7, 10), size: 0.8em)
