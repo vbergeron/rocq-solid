@@ -378,7 +378,7 @@ Inductive Effect :=    (* performed by the host *)
 #v(0.5em)
 #text(size: 0.7em)[
   _From Rocq to Metal: A Pipeline for Formally Verified Microcontroller
-  Firmware_, AIMACS \@ CAV 2026:
+  Firmware_:
   #link("https://github.com/vbergeron/from-rocq-to-metal")[github.com/vbergeron/from-rocq-to-metal]
   · Encore!: #link("https://github.com/vbergeron/encore")[github.com/vbergeron/encore]
 ]
