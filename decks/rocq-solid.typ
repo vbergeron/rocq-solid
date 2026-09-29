@@ -148,7 +148,7 @@ Writing *what you want to prove* is much easier.]
 
 == Example: the proof
 
-#rocq-file("/theories/Intro.v", lines: (20, 25))
+#rocq-file("/theories/Intro.v", lines: (20, 26))
 
 #todo[the proof produced by the agent, checked by Rocq]
 
@@ -368,11 +368,7 @@ One step never empties the list; *by induction*, no run ever does.
   column-gutter: 1cm,
   [
     #rocq-file("/theories/Orders.v", lines: (7, 15), size: 0.75em)
-    #text(size: 0.75em)[
-```rocq
-handle : order -> event -> order
-```
-    ]
+    #rocq-file("/theories/Orders.v", lines: (23, 23), size: 0.75em)
     #rocq-file("/theories/Orders.v", lines: (37, 39), size: 0.75em)
   ],
   [
@@ -403,29 +399,30 @@ An event delivered twice is *counted once*.
 
 #rocq-file("/extraction/OrdersExtraction.v", lines: (4, 7), size: 0.65em)
 
-#text(size: 0.6em)[
+#grid(
+  columns: (1fr, 1.1fr),
+  column-gutter: 0.8cm,
+  align: top,
+  [
+    #text(size: 0.6em, fill: luma(120))[Rocq: `theories/Orders.v`]
+    #rocq-file("/theories/Orders.v", lines: (7, 15), size: 0.62em)
+  ],
+  [
+    #text(size: 0.6em, fill: luma(120))[OCaml: `orders.mli`, written by `dune build`]
+    #text(size: 0.62em)[
 ```ocaml
-(* orders.ml, written by dune build *)
-let handle o e =
-  if already_seen o e
-  then o
-  else let seen' = (event_id e) :: o.seen in
-       (match e with
-        | Paid (_, n) ->
-          { seen = seen'; paid = (add o.paid n); refunded = o.refunded }
-        | Refunded (_, n) ->
-          if (<=) (add o.refunded n) o.paid
-          then { seen = seen'; paid = o.paid; refunded = (add o.refunded n) }
-          else { seen = seen'; paid = o.paid; refunded = o.refunded })
-```
-]
+type event =
+| Paid of int * int
+| Refunded of int * int
 
-#[
-  #set text(size: 0.8em)
-  - Every `dune build` re-checks the proofs, *regenerates* `orders.ml` and compiles it
-  - The OCaml is generated, *never edited*: the code that ships is the code that was proved
-  - What we trust: Rocq's extraction, and `nat` mapped to OCaml's `int`
-]
+type order = { seen : int list; paid : int; refunded : int }
+
+val handle : order -> event -> order
+val replay : event list -> order
+```
+    ]
+  ],
+)
 
 == Shipping it: a Kafka consumer
 
@@ -497,32 +494,19 @@ Inductive cmd :=
   · Encore!: #link("https://github.com/vbergeron/encore")[github.com/vbergeron/encore]
 ]
 
-== Embedded firmware: no free retries
+== Embedded firmware: what the card guarantees
 
-#{
-  let def(from, to, body) = (
-    block(rocq-file("/theories/Pin.v", lines: (from, to), size: 0.65em)),
-    text(size: 0.75em, body),
-  )
-  grid(
-    columns: (auto, 1fr),
-    column-gutter: 0.8cm,
-    row-gutter: 0.5em,
-    align: horizon,
-    ..def(76, 77)[The state of the card *after* the command (`step` also returns an answer)],
-    ..def(79, 80)[The number of PIN attempts left *goes up*],
-    ..def(82, 83)[The command is *the right PIN*, and the card is not blocked],
-    ..def(85, 86)[The command is *the right PUK*, and the PUK is not blocked],
-  )
-}
+#rocq-file("/theories/Pin.v", lines: (96, 97), size: 0.8em)
 
-#v(0.3em)
-#rocq-file("/theories/Pin.v", lines: (91, 92), size: 0.8em)
+The card *only unlocks with the right PIN*.
 
-#v(0.4em)
-No sequence of commands gives an attacker *free attempts* at your PIN. And once
-both counters reach zero, the card stays *locked forever*: that is proved too.
+#v(0.8em)
 
+#rocq-file("/theories/Pin.v", lines: (109, 110), size: 0.8em)
+
+A card blocked for good *stays blocked*, whatever you send it.
+
+#v(0.8em)
 #text(size: 0.7em)[
   PIN and PUK logic of a SIM card:
   #link("https://github.com/vbergeron/encore-benchmarks/tree/main/workloads/w4_pin")[encore-benchmarks, workload W4]

@@ -17,8 +17,9 @@ Proof.
   - now rewrite IH, app_assoc.
 Qed.
 
-Theorem rev_involutive {A : Type} (l : list A) : rev (rev l) = l.
+Theorem rev_involutive : forall {A : Type} (l : list A), rev (rev l) = l.
 Proof.
+  intros A l.
   induction l as [| x xs IH]; simpl.
   - reflexivity.
   - now rewrite rev_app, IH.

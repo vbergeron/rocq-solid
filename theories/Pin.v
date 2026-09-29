@@ -72,31 +72,46 @@ Proof.
   - injection H as -> ->. rewrite Nat.eqb_refl. apply IH. reflexivity.
 Qed.
 
-(* The words of the theorem, one definition each. *)
+(* The words of the theorems, one definition each. *)
 Definition next_state (s : state) (c : cmd) : state :=
   fst (step s c).
 
-Definition tries_go_up (s : state) (c : cmd) : Prop :=
-  tries s < tries (next_state s c).
+Definition unlocked (s : state) : Prop :=
+  auth s = true.
 
 Definition right_pin (s : state) (c : cmd) : Prop :=
   c = Verify (pin s) /\ 0 < tries s.
 
-Definition right_puk (s : state) (c : cmd) : Prop :=
-  exists p, c = Unblock (puk s) p /\ 0 < puk_tries s.
+Definition blocked (s : state) : Prop :=
+  tries s = 0 /\ puk_tries s = 0 /\ auth s = false.
 
-(* No free retries: the PIN counter only goes back up on the right PIN
-   while the card is not blocked, or the right PUK while the PUK is not
-   blocked. *)
-Theorem no_free_retries : forall (s : state) (c : cmd),
-  tries_go_up s c -> right_pin s c \/ right_puk s c.
+(* The card after a whole sequence of commands. *)
+Fixpoint run (s : state) (cmds : list cmd) : state :=
+  match cmds with
+  | [] => s
+  | c :: rest => run (next_state s c) rest
+  end.
+
+(* The card only unlocks with the right PIN. *)
+Theorem no_pin_no_access : forall (s : state) (c : cmd),
+  unlocked (next_state s c) -> unlocked s \/ right_pin s c.
 Proof.
-  unfold tries_go_up, next_state, right_pin, right_puk.
+  unfold unlocked, next_state, right_pin.
   intros [pn pk t pt a] c; destruct c as [g|p|k p| |]; cbn in *;
     [ destruct t as [|t]; [|destruct (digits_eqb g pn) eqn:E]
     | destruct a
     | destruct pt as [|pt]; [|destruct (digits_eqb k pk) eqn:E]
-    | | ]; cbn in *; intro H; try lia.
-  - left. apply digits_eqb_eq in E. subst. split; [reflexivity | lia].
-  - right. exists p. apply digits_eqb_eq in E. subst. split; [reflexivity | lia].
+    | | ]; cbn in *; intro H; try discriminate; auto.
+  right. apply digits_eqb_eq in E. subst. split; [reflexivity | lia].
+Qed.
+
+(* A card blocked for good stays blocked, whatever it is sent. *)
+Theorem blocked_forever : forall (s : state) (cmds : list cmd),
+  blocked s -> blocked (run s cmds).
+Proof.
+  unfold blocked. intros s cmds; revert s.
+  induction cmds as [| c rest IH]; intros s H; cbn; [exact H|].
+  apply IH. destruct s as [pn pk t pt a]; cbn in H |- *.
+  destruct H as (-> & -> & ->).
+  unfold next_state; destruct c as [g|p|k p| |]; cbn; auto.
 Qed.
