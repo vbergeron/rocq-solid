@@ -415,10 +415,10 @@ let rec loop state =
   match Kafka.consume ~timeout_ms:1000 topic partition with
   | Kafka.Message (_, _, offset, payload, _) ->
       let event = Codec.decode payload in          (* parse *)
-      let state = Orders.handle state event in     (* proved *)
-      Store.save state;                            (* persist *)
+      let next = Orders.handle state event in      (* proved *)
+      Store.save next;                             (* persist *)
       Kafka.store_offset topic partition offset;   (* acknowledge *)
-      loop state
+      loop next
   | Kafka.PartitionEnd _ -> loop state
 ```
 ]
