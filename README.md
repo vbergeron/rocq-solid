@@ -13,6 +13,7 @@ published to GitHub Pages.
 
 ```
 theories/            Rocq sources: the `Solid` theory, built by dune
+extraction/          Orders.v extracted to OCaml and compiled, by dune
 dune-project         dune + Rocq setup (rocq-solid.opam is generated from it)
 template/lib.typ     slide template: theme, `rocq-file`, `hero`, QR slides
 template/syntaxes/   Rocq highlighting grammar (Typst bundles none)

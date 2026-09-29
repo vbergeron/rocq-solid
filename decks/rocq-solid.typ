@@ -378,6 +378,59 @@ An event delivered twice is *counted once*.
 #v(0.8em)
 #align(center)[Friday, 23:47 *cannot happen*.]
 
+== Shipping it: extraction to OCaml
+
+#rocq-file("/extraction/OrdersExtraction.v", lines: (4, 7), size: 0.65em)
+
+#text(size: 0.6em)[
+```ocaml
+(* orders.ml, written by dune build *)
+let handle o e =
+  if already_seen o e
+  then o
+  else let seen' = (event_id e) :: o.seen in
+       (match e with
+        | Paid (_, n) ->
+          { seen = seen'; paid = (add o.paid n); refunded = o.refunded }
+        | Refunded (_, n) ->
+          if (<=) (add o.refunded n) o.paid
+          then { seen = seen'; paid = o.paid; refunded = (add o.refunded n) }
+          else { seen = seen'; paid = o.paid; refunded = o.refunded })
+```
+]
+
+#[
+  #set text(size: 0.8em)
+  - Every `dune build` re-checks the proofs, *regenerates* `orders.ml` and compiles it
+  - The OCaml is generated, *never edited*: the code that ships is the code that was proved
+  - What we trust: Rocq's extraction, and `nat` mapped to OCaml's `int`
+]
+
+== Shipping it: a Kafka consumer
+
+#text(size: 0.7em)[
+```ocaml
+(* consumer.ml: the thin shell around the proved core *)
+let rec loop state =
+  match Kafka.consume ~timeout_ms:1000 topic partition with
+  | Kafka.Message (_, _, offset, payload, _) ->
+      let event = Codec.decode payload in          (* parse *)
+      let state = Orders.handle state event in     (* proved *)
+      Store.save state;                            (* persist *)
+      Kafka.store_offset topic partition offset;   (* acknowledge *)
+      loop state
+  | Kafka.PartitionEnd _ -> loop state
+```
+]
+
+#[
+  #set text(size: 0.85em)
+  - The shell only *parses*, *persists* and *acknowledges*: a few lines, reviewed by hand
+  - A crash between `save` and the acknowledgement? Kafka delivers the event *again*:
+    `delivered_twice_counted_once` says it is harmless
+  - The business rule lives in `Orders.handle`, *proved*
+]
+
 == Embedded firmware: the device is a state machine
 
 #grid(
