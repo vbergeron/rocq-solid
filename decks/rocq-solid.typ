@@ -16,6 +16,84 @@
   ),
 )
 
+= A story about Jack
+
+== Meet Jack
+
+- Full stack engineer at a fast-growing startup
+- Twelve engineers, one product, a roadmap that doubles every quarter
+- Frontend in the morning, database migrations after lunch, on call at night
+
+== Jack loves Claude
+
+#hero[Claude writes the feature.
+
+Claude writes the tests.
+
+CI is green. *Ship it.*]
+
+== Six good months
+
+- Three times as many pull requests merged per week
+- Coverage above 90%, and climbing
+- Not a single incident
+
+#v(1em)
+Jack reads every diff. Well, most of them. The tests are green anyway.
+
+== What Jack did not see: a vacuous test
+
+```ts
+test("a refund never exceeds what was paid", async () => {
+  const refunds = await db.refunds.findMany({ orderId: order.id });
+  for (const refund of refunds) {
+    expect(refund.amount).toBeLessThanOrEqual(order.paid);
+  }
+});
+```
+
+The fixture creates an order, but *no refund*. The loop never runs.
+
+This test is green today, and will be green forever: *it cannot fail.*
+
+== What Jack did not see: an assumption
+
+```ts
+type Order = {
+  id: OrderId;
+  paid: Money;
+  refund?: Refund; // an order is refunded at most once
+};
+
+const refundable = (o: Order) => o.paid - (o.refund?.amount ?? 0);
+```
+
+Nobody said an order is refunded at most once.
+
+Claude *guessed*, it read well, and the guess became the domain model.
+
+== Then the product moves
+
+- Support asks for *partial refunds*: one button, one click per refund
+- Claude adds the button; each click stores a new `Refund`
+- `order.refund` now points to the latest one
+- `refundable` still subtracts a single refund: all tests pass
+
+== Friday, 23:47
+
+#hero[A customer notices the refund button *works more than once*.
+
+By Monday morning: *€180,000* refunded, on *€40,000* of orders.]
+
+== The post-mortem
+
+- Every test was green
+- Every pull request was reviewed and approved
+- The code did exactly what it said
+
+#v(1em)
+#align(center)[*Nobody had written down what must be true.*]
+
 = Doubting our guarantees
 
 == The question
