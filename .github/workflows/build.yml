@@ -48,7 +48,7 @@ jobs:
 
   deploy:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    needs: [rocq, slides]
+    needs: [slides]
     runs-on: ubuntu-latest
     permissions:
       pages: write
