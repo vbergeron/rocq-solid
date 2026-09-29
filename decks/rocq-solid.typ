@@ -218,9 +218,127 @@ Writing *what you want to prove* is much easier.]
 
 #todo[a service whose business core is extracted from Rocq]
 
-== Frontend
+== Frontend: a reducer is a pure function
 
-#todo[proved client-side state logic]
+```ts
+const [state, dispatch] = useReducer(reducer, initialState);
+// reducer: (state, event) => state
+```
+
+- Same state, same event: *same next state*, and no side effects
+- React counts on it: in Strict Mode, it calls your reducer *twice*
+
+#v(0.5em)
+#{
+  let ink = rgb("#23373b")
+  let stage(name, note, fill: luma(240)) = box(
+    width: 4.4cm,
+    fill: fill,
+    radius: 6pt,
+    inset: (y: 0.6em),
+    align(center)[
+      #text(weight: "bold", fill: ink, name) \
+      #text(size: 0.65em, fill: luma(100), note)
+    ],
+  )
+  let step(label) = align(center)[
+    #text(size: 0.55em, style: "italic", fill: luma(120), label) \
+    #text(size: 1.1em, fill: luma(150))[$arrow.long$]
+  ]
+  align(center, grid(
+    columns: 7,
+    column-gutter: 0.3em,
+    align: horizon,
+    stage(fill: coral.lighten(88%))[Rocq][reducer + proofs],
+    step[extraction],
+    stage[OCaml][reducer + hook],
+    step[Melange],
+    stage[JavaScript][ES module],
+    step[import],
+    stage[React][imports the hook],
+  ))
+}
+
+#v(0.8em)
+*Rocqducers*:
+#link("https://github.com/vbergeron/rocqducers")[github.com/vbergeron/rocqducers]
+
+== Remember the refund button?
+
+#rocq-file("/theories/AsyncButton.v", lines: (5, 15))
+
+== Remember the refund button?
+
+#rocq-file("/theories/AsyncButton.v", lines: (17, 20))
+
+#v(1em)
+A click while the request is in flight *does nothing*.
+
+== The pick list: the model
+
+#rocq-file("/theories/PickList.v", lines: (7, 9), size: 0.8em)
+
+#v(0.5em)
+
+#text(size: 0.8em)[
+```rocq
+reducer : state A -> event -> state A
+init    : A -> list A -> state A
+size    : state A -> nat
+```
+]
+
+#v(0.5em)
+- `init d rest` starts with `d` picked and every item of `rest` suggested
+- `size s` counts the items, picked or suggested
+
+== The pick list: the theorems
+
+#rocq-file("/theories/PickList.v", lines: (71, 72), size: 0.8em)
+
+Whatever the user clicks, *at least one item stays picked*.
+
+#v(0.8em)
+
+#rocq-file("/theories/PickList.v", lines: (106, 107), size: 0.8em)
+
+Whatever the user clicks, *no item is ever lost or duplicated*.
+
+== The pick list: the proof, one step
+
+#rocq-file("/theories/PickList.v", lines: (54, 68), size: 0.75em)
+
+== The pick list: the proof, any run
+
+#[
+  #show "reducer_keeps_picked": set text(weight: "bold")
+  #rocq-file("/theories/PickList.v", lines: (70, 80), size: 0.8em)
+]
+
+#v(0.5em)
+One step never empties the list; *by induction*, no run ever does.
+
+== More frontend use cases
+
+#grid(
+  columns: (1fr, 1fr),
+  column-gutter: 1cm,
+  [
+    - *Undo / redo* for any reducer: Undo reverses Do, Redo reverses Undo
+      (Rocqducers' `UndoList`)
+    - *Branching history*: no edit is ever lost (`UndoTree`)
+    - *Wizards and forms*: Submit is only reachable from a valid state
+    - *Shopping cart*: the total is the sum of its lines, a promo code
+      applies once
+  ],
+  [
+    - *Permissions*: a button is shown exactly when the rule allows it
+    - *Connection and auth*: no request leaves after logout
+    - *Selection, pagination, drag and drop*: indices stay in bounds,
+      a reorder is a permutation
+    - *Optimistic updates*: a rollback restores exactly the previous state
+  ],
+)
 
 == Event-driven systems
 
