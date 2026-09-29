@@ -379,7 +379,7 @@ Inductive Effect :=    (* performed by the host *)
 #text(size: 0.7em)[
   _From Rocq to Metal: A Pipeline for Formally Verified Microcontroller
   Firmware_:
-  #link("https://github.com/vbergeron/from-rocq-to-metal")[github.com/vbergeron/from-rocq-to-metal]
+  #link("https://arxiv.org/abs/2606.02651")[arXiv:2606.02651]
   · Encore!: #link("https://github.com/vbergeron/encore")[github.com/vbergeron/encore]
 ]
 
