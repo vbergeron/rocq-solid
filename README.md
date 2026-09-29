@@ -18,6 +18,8 @@ dune-project         dune + Rocq setup (rocq-solid.opam is generated from it)
 template/lib.typ     slide template: theme, `rocq-file`, `hero`, QR slides
 template/syntaxes/   Rocq highlighting grammar (Typst bundles none)
 template/fonts/      Fira Code (OFL) for code, with its ligatures
+template/images/     logos: rocq-logo.svg (rocq-prover.org, Unlicense),
+                     lean-logo.svg (leanprover/vscode-lean4, Apache-2.0)
 decks/               the talk(s), one .typ file each
 site/index.html      the GitHub Pages site listing every deck
 mise.toml            tools (Typst, opam) and tasks
@@ -58,7 +60,9 @@ decks/rocq-solid.typ`.
 Each `= Section` opens a section slide and each `== Title` a new slide.
 `rocq-file("/theories/Intro.v", lines: (20, 25))` shows a range of a checked
 source file, so the code on screen is the code `mise run build` checks;
-fenced ```` ```rocq ```` blocks are highlighted too. `#todo[..]` marks content
+fenced ```` ```rocq ```` blocks are highlighted too.
+`message-slide(title: [Section], message: [..])[..]` keeps the section's name
+in the header and opens the body with the slide's message, large. `#todo[..]` marks content
 still to write, in grey italics.
 
 `solid-theme` opens with a title slide and, if `slug` is set, a "Follow
