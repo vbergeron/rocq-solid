@@ -427,7 +427,7 @@ Whatever events arrive, in whatever order: *never more refunded than paid*.
 An event delivered twice is *counted once*.
 
 #v(0.6em)
-#align(center)[Friday, 23:47 *cannot happen*.]
+#align(center)[Friday, 22h57 *cannot happen*.]
 
 == Shipping it: extraction to OCaml
 
