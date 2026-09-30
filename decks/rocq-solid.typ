@@ -129,7 +129,7 @@ But nobody wrote down what must be true.
 #set text(size: 17pt)
 
 #grid(
-  columns: (1.3fr, 1fr),
+  columns: (1.12fr, 1fr),
   gutter: 20pt,
   align: horizon,
   [
@@ -218,13 +218,10 @@ But nobody wrote down what must be true.
 // checking the proof, until a machine does it.
 #let theorem-slide = message-slide.with(title: [Theorem provers])
 
-#theorem-slide(message: [
-  #box(baseline: 20%, image("/template/images/rocq-logo.svg", height: 1.2cm))
-  #h(0.4em) 40 years of *machine-checked* proofs
-])[
-  #set text(size: 17pt)
-
-  #table(
+== Theorem Provers
+  #grid(
+    columns: (2fr, 1fr),
+  table(
     columns: (auto, 1fr),
     inset: 6pt,
     align: left + horizon,
@@ -235,14 +232,15 @@ But nobody wrote down what must be true.
     [*2006*], [CompCert, a C compiler proved correct],
     [*2013*], [ACM Software System Award],
     [*2025*], [Renamed *Rocq*, after Rocquencourt],
+  ),
+  image("../template/images/rocq-logo.svg")
+
   )
-]
 
-#theorem-slide[
+== Theorem Provers
   #align(center + horizon, image("/template/images/lean-logo.svg", width: 35%))
-]
 
-#theorem-slide(message: [Many others, already *in production*])[
+== Theorem Provers
   #{
     let card(name, hook, body) = box(
       width: 100%,
@@ -275,17 +273,10 @@ But nobody wrote down what must be true.
         their ideas first],
     )
   }
-]
 
 = Vericoding
 
-== Definition
-
-- Making formal verification an *everyday tool*
-- Taking proof assistants out of research labs
-- Putting them in the hands of teams that ship to production
-
-== The asymmetry
+== Vericoding
 
 #hero[Writing a proof is hard.
 
@@ -293,74 +284,88 @@ Writing *what you want to prove* is much easier.]
 
 == Who does what
 
-- *You*: state what must be true (the specification)
-- *The AI*: figures out why it holds (the proof)
-- *Rocq*: checks the proof, without having to trust the AI
+#align(center + horizon, {
+  import "@preview/fletcher:0.5.8" as fletcher: diagram, node, edge
+  let ink = rgb("#23373b")
+  let actor(pos, name, body, ..args) = node(
+    pos,
+    box(width: 6.2cm, align(center)[
+      #block(height: 1cm, align(horizon, body))
+      #text(size: 1.05em, weight: "bold", fill: ink, name)
+    ]),
+    fill: luma(240),
+    corner-radius: 6pt,
+    inset: 12pt,
+    ..args,
+  )
+  set text(size: 18pt)
+  diagram(
+    spacing: (3.2cm, 2.2cm),
+    edge-stroke: 1.5pt + ink,
+    mark-scale: 80%,
+    actor((0, 0), [You], text(size: 1.6em)[👤]),
+    actor((1, 0), [AI agent], text(size: 1.6em)[🤖]),
+    actor((2, 0), [Prover], text(size: 1.6em)[⚖️], stroke: 1.5pt + coral),
+    edge((0, 0), (1, 0), "-|>", text(size: 0.7em)[specification], label-side: left),
+    edge((1, 0), (2, 0), "-|>", text(size: 0.7em)[proof attempts],
+      label-side: left, bend: 25deg),
+    edge((2, 0), (1, 0), "-|>", text(size: 0.7em)[goals, errors],
+      label-side: left, bend: 25deg),
+    node((1.5, 0), text(size: 0.6em, weight: "bold", fill: white)[MCP],
+      fill: coral, corner-radius: 3pt, inset: 4pt),
+    edge((2, 0), (2, 0.9), (0, 0.9), (0, 0), "-|>",
+      text(size: 0.7em, fill: coral)[*✓ proved*],
+      stroke: 1.5pt + coral, label-side: left),
+  )
+})
+
+== Example: the code
+
+#grid(
+  columns: (1fr, 1fr),
+  column-gutter: 0.8cm,
+  align: horizon,
+  rocq-file("/theories/Orders.v", lines: (7, 15), size: 1em),
+  {
+    // Signatures only, read from the checked file: bodies elided.
+    let src = read("/theories/Orders.v").split("\n")
+    let sig(n) = src.at(n - 1).trim() + " ..."
+    text(size: 1em, raw(lang: "rocq", block: true, (
+      "(* Was this event already handled? *)", sig(20), "",
+      "(* Apply one event to an order. *)", sig(23), "",
+      "(* The order, rebuilt from its events. *)", sig(38),
+    ).join("\n")))
+  },
+)
 
 == Example: the specification
 
-// Placeholder example, to replace with the talk's running example.
-#rocq-file("/theories/Intro.v", lines: (20, 20))
+#rocq-file("/theories/Orders.v", lines: (51, 52))
 
-#todo[the statement written by a human, readable without the proof]
+#v(0.5em)
+- Written by *you*: an order never refunds more than it was paid
+- True for *every* sequence of events: not just the cases you thought of testing
+- Two lines to review, readable *without the proof*
 
 == Example: the proof
 
-#rocq-file("/theories/Intro.v", lines: (20, 26))
+#grid(
+  columns: (1.12fr, 1fr),
+  column-gutter: 0.5cm,
+  align: top,
+  rocq-file("/theories/Orders.v", lines: (42, 49), size: 1em),
+  rocq-file("/theories/Orders.v", lines: (51, 59), size: 1em),
+)
 
-#todo[the proof produced by the agent, checked by Rocq]
+#v(0.5em)
+#set text(size: 0.85em)
+- Written by *the agent*: first a lemma about *one* event, then induction over *all* of them
+- `Qed.`: Rocq accepted every step. A wrong proof *does not compile*
+- You do not have to read it, only the statement
 
 == A new kind of guarantee
 
-#grid(
-  columns: (1fr, 1fr),
-  column-gutter: 1cm,
-  [
-    *Interfaces today*
-    - A promise
-    - Documented, tested, hoped for
-  ],
-  [
-    *Proved interfaces*
-    - A contract
-    - Checked by the machine
-  ],
-)
-
-= What to prove?
-
-== Code worth proving
-
-- *Invariants*
-- *State machines*
-- *Business rules* where a bug is not just an incident but can cost a lot
-
-== Invariants
-
-#todo[an invariant and its Rocq specification]
-
-== State machines
-
-#todo[a state machine: forbidden transitions, unreachable states]
-
-== Business rules
-
-#todo[a costly business rule: billing, permissions, quotas…]
-
-== Where proof pays off, where it is not worth it
-
-#grid(
-  columns: (1fr, 1fr),
-  column-gutter: 1cm,
-  [
-    *Pays off*
-    - #todo[criteria: cost of a bug, stability of the spec…]
-  ],
-  [
-    *Not worth it*
-    - #todo[criteria: fast-changing UI, throwaway code…]
-  ],
-)
+#align(center)[image("images/sacrifice.jpg")]
 
 = Shipping proved code
 
@@ -373,29 +378,95 @@ Writing *what you want to prove* is much easier.]
     The rest of the app calls it *like any other library*.
   ]
 
-  #v(1.2em)
-  #{
-    let ink = rgb("#23373b")
-    let target(name, lang, fn) = box(
-      width: 7cm,
-      height: 2.4cm,
-      fill: luma(240),
-      radius: 6pt,
-      align(center + horizon)[
-        #text(weight: "bold", fill: ink, name) \
-        #text(size: 0.7em, fill: luma(100), lang) \
-        #text(size: 0.8em, fn)
-      ],
-    )
-    grid(
-      columns: 3,
-      column-gutter: 0.8cm,
-      target[The browser][React, via OCaml and Melange][`reducer`],
-      target[A service][OCaml, in a Kafka consumer][`handle`],
-      target[A microcontroller][the Encore! VM][`step`],
-    )
-  }
 ]
+== Event processing: an order is a list of events
+
+#grid(
+  columns: (1.1fr, 1fr),
+  column-gutter: 1cm,
+  [
+    #rocq-file("/theories/Orders.v", lines: (7, 15), size: 0.75em)
+    #rocq-file("/theories/Orders.v", lines: (23, 23), size: 0.75em)
+    #rocq-file("/theories/Orders.v", lines: (37, 39), size: 0.75em)
+  ],
+  [
+    #set text(size: 0.85em)
+    - Every change is an *event*: a payment, a refund
+    - The order is *replayed* from its events, one `handle` at a time
+    - Queues deliver *at least once*: the same event can arrive *twice*
+    - `handle` is a pure function: proved in Rocq, called by the consumer
+  ],
+)
+
+== Event processing: Jack's refunds, proved
+
+#rocq-file("/theories/Orders.v", lines: (51, 52), size: 0.8em)
+
+Whatever events arrive, in whatever order: *never more refunded than paid*.
+
+#v(0.8em)
+
+#rocq-file("/theories/Orders.v", lines: (61, 62), size: 0.8em)
+
+An event delivered twice is *counted once*.
+
+#v(0.8em)
+#align(center)[Friday, 23:47 *cannot happen*.]
+
+== Shipping it: extraction to OCaml
+
+#rocq-file("/extraction/OrdersExtraction.v", lines: (4, 7), size: 0.65em)
+
+#grid(
+  columns: (1fr, 1.1fr),
+  column-gutter: 0.8cm,
+  align: top,
+  [
+    #text(size: 0.6em, fill: luma(120))[Rocq: `theories/Orders.v`]
+    #rocq-file("/theories/Orders.v", lines: (7, 15), size: 0.62em)
+  ],
+  [
+    #text(size: 0.6em, fill: luma(120))[OCaml: `orders.mli`, written by `dune build`]
+    #text(size: 0.62em)[
+```ocaml
+type event =
+| Paid of int * int
+| Refunded of int * int
+
+type order = { seen : int list; paid : int; refunded : int }
+
+val handle : order -> event -> order
+val replay : event list -> order
+```
+    ]
+  ],
+)
+
+== Shipping it: a Kafka consumer
+
+#text(size: 0.7em)[
+```ocaml
+(* consumer.ml: the thin shell around the proved core *)
+let rec loop state =
+  match Kafka.consume ~timeout_ms:1000 topic partition with
+  | Kafka.Message (_, _, offset, payload, _) ->
+      let event = Codec.decode payload in          (* parse *)
+      let next = Orders.handle state event in      (* proved *)
+      Store.save next;                             (* persist *)
+      Kafka.store_offset topic partition offset;   (* acknowledge *)
+      loop next
+  | Kafka.PartitionEnd _ -> loop state
+```
+]
+
+#[
+  #set text(size: 0.85em)
+  - The shell only *parses*, *persists* and *acknowledges*: a few lines, reviewed by hand
+  - A crash between `save` and the acknowledgement? Kafka delivers the event *again*:
+    `delivered_twice_counted_once` says it is harmless
+  - The business rule lives in `Orders.handle`, *proved*
+]
+
 
 == Frontend: a reducer is a pure function
 
@@ -518,94 +589,6 @@ One step never empties the list; *by induction*, no run ever does.
     - *Optimistic updates*: a rollback restores exactly the previous state
   ],
 )
-
-== Event processing: an order is a list of events
-
-#grid(
-  columns: (1.1fr, 1fr),
-  column-gutter: 1cm,
-  [
-    #rocq-file("/theories/Orders.v", lines: (7, 15), size: 0.75em)
-    #rocq-file("/theories/Orders.v", lines: (23, 23), size: 0.75em)
-    #rocq-file("/theories/Orders.v", lines: (37, 39), size: 0.75em)
-  ],
-  [
-    #set text(size: 0.85em)
-    - Every change is an *event*: a payment, a refund
-    - The order is *replayed* from its events, one `handle` at a time
-    - Queues deliver *at least once*: the same event can arrive *twice*
-    - `handle` is a pure function: proved in Rocq, called by the consumer
-  ],
-)
-
-== Event processing: Jack's refunds, proved
-
-#rocq-file("/theories/Orders.v", lines: (51, 52), size: 0.8em)
-
-Whatever events arrive, in whatever order: *never more refunded than paid*.
-
-#v(0.8em)
-
-#rocq-file("/theories/Orders.v", lines: (61, 62), size: 0.8em)
-
-An event delivered twice is *counted once*.
-
-#v(0.8em)
-#align(center)[Friday, 23:47 *cannot happen*.]
-
-== Shipping it: extraction to OCaml
-
-#rocq-file("/extraction/OrdersExtraction.v", lines: (4, 7), size: 0.65em)
-
-#grid(
-  columns: (1fr, 1.1fr),
-  column-gutter: 0.8cm,
-  align: top,
-  [
-    #text(size: 0.6em, fill: luma(120))[Rocq: `theories/Orders.v`]
-    #rocq-file("/theories/Orders.v", lines: (7, 15), size: 0.62em)
-  ],
-  [
-    #text(size: 0.6em, fill: luma(120))[OCaml: `orders.mli`, written by `dune build`]
-    #text(size: 0.62em)[
-```ocaml
-type event =
-| Paid of int * int
-| Refunded of int * int
-
-type order = { seen : int list; paid : int; refunded : int }
-
-val handle : order -> event -> order
-val replay : event list -> order
-```
-    ]
-  ],
-)
-
-== Shipping it: a Kafka consumer
-
-#text(size: 0.7em)[
-```ocaml
-(* consumer.ml: the thin shell around the proved core *)
-let rec loop state =
-  match Kafka.consume ~timeout_ms:1000 topic partition with
-  | Kafka.Message (_, _, offset, payload, _) ->
-      let event = Codec.decode payload in          (* parse *)
-      let next = Orders.handle state event in      (* proved *)
-      Store.save next;                             (* persist *)
-      Kafka.store_offset topic partition offset;   (* acknowledge *)
-      loop next
-  | Kafka.PartitionEnd _ -> loop state
-```
-]
-
-#[
-  #set text(size: 0.85em)
-  - The shell only *parses*, *persists* and *acknowledges*: a few lines, reviewed by hand
-  - A crash between `save` and the acknowledgement? Kafka delivers the event *again*:
-    `delivered_twice_counted_once` says it is harmless
-  - The business rule lives in `Orders.handle`, *proved*
-]
 
 == Embedded firmware: the device is a state machine
 
