@@ -386,7 +386,7 @@ Writing *what you want to prove* is much easier.]
 
 == A new kind of guarantee
 
-#align(center + horizon, image("images/sacrifice.jpg", height: 100%))
+#align(center + horizon, image("images/sacrifice.jpg", height: 85%))
 
 = Shipping proved code
 
