@@ -60,7 +60,16 @@ decks/rocq-solid.typ`.
 Each `= Section` opens a section slide and each `== Title` a new slide.
 `rocq-file("/theories/Intro.v", lines: (20, 25))` shows a range of a checked
 source file, so the code on screen is the code `mise run build` checks;
-fenced ```` ```rocq ```` blocks are highlighted too.
+fenced ```` ```rocq ```` blocks are highlighted too. `lines` also takes
+several ranges, `lines: ((7, 15), (23, 23))`, shown as one block.
+
+Sizes come from the type scale at the top of `template/lib.typ`, never from
+ad hoc `size: 0.7em` wrappers: code blocks are `code-size` (16pt), or
+`code-small` (13pt) when set side by side or long, via `rocq-file(.., size:
+code-small)` or `#small-code[..]`; body text is 20pt, `size-dense` (17pt) on
+slides that share the space with code or a figure; `#note[..]` sets captions,
+sources and links, `#callout[..]` a slide's takeaway in a grey box, and
+`#hero[..]` a slide's single statement.
 `message-slide(title: [Section], message: [..])[..]` keeps the section's name
 in the header and opens the body with the slide's message, large. `#todo[..]` marks content
 still to write, in grey italics.
