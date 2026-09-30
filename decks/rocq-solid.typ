@@ -15,88 +15,104 @@
 = A story about Jack
 
 == A story about Jack
-  #grid(
-    columns: (2fr, 1fr),
-    text[
-  - Full stack developer at a small e-shop startup
-  - Twelve engineers, one product, a roadmap that doubles every quarter
-  - Frontend in the morning, database migrations after lunch, on call at night
-    ],
-    image("images/engineer.webp", width: 80%)
-  )
+
+#grid(
+  columns: (2fr, 1fr),
+  column-gutter: 1cm,
+  align: horizon,
+  [
+    - Full stack developer at a small e-shop startup
+    - Twelve engineers, one product, a roadmap that doubles every quarter
+    - Frontend in the morning, database migrations after lunch, on call at night
+  ],
+  image("images/engineer.webp", width: 100%),
+)
 
 == A story about Jack
-  #hero[Claude writes the feature.
+
+#hero[
+  Claude writes the feature.
 
   Claude writes the tests.
 
-  Jack *loves* Claude]
+  Jack *loves* Claude.
+]
 
 == A story about Jack
-  #grid(
-    columns: (2fr, 1fr),
-    text[The past 9 months have been a *blast* !
+
+#grid(
+  columns: (2fr, 1fr),
+  column-gutter: 1cm,
+  align: horizon,
+  [
+    The past 9 months have been a *blast*!
     - Three times as many pull requests merged per week
-    - Coverage above 90%, and climbing],
-    image("images/klod.jpg", width: 80%)
-  )
+    - Coverage above 90%, and climbing
 
-  #v(1em)
-  Jack reads every diff. Well, most of them. _The tests are green anyway_.
-
-
-== A story about Jack
-Friday, 10h00.
-
-Product asks for *partial refunds*: one button, one click per refund.
-
-Claude does the job from the front to the DB.
-
-Tests are still green
+    #v(0.6em)
+    Jack reads every diff. Well, most of them. _The tests are green anyway._
+  ],
+  image("images/klod.jpg", width: 100%),
+)
 
 == A story about Jack
-Friday, 22h57.
 
-A customer notices the refund button *works more than once*.
+#moment[Friday, 10h00][
+  Product asks for *partial refunds*: one button, one click per refund.
 
+  Claude does the job from the front to the DB.
+
+  The tests are still green.
+]
 
 == A story about Jack
-Monday, 08h43
 
-*€180,000* refunded, on *€40* of orders.
+#moment[Friday, 22h57][
+  A customer notices the refund button *works more than once*.
+]
 
 == A story about Jack
-  ```ts
-  type Order = {
-    id: OrderId;
-    paid: Money;
-    refund?: Refund; // an order is refunded at most once
-  };
 
-  const refundable = (o: Order) => o.paid - (o.refund?.amount ?? 0);
-  ```
+#moment[Monday, 08h43][
+  *€180,000* refunded, on *€40* of orders.
+]
+
+== A story about Jack
+
+```ts
+type Order = {
+  id: OrderId;
+  paid: Money;
+  refund?: Refund; // an order is refunded at most once
+};
+
+const refundable = (o: Order) => o.paid - (o.refund?.amount ?? 0);
+```
 /*
   "At most once" was never asked for. Claude *guessed*, it read well,
   and the guess became the domain model.
 */
 
 == A story about Jack
-  ```ts
-  test("a refund never exceeds what was paid", async () => {
-    const refunds = await db.refunds.findMany({ orderId: order.id });
-    for (const refund of refunds) {
-      expect(refund.amount).toBeLessThanOrEqual(order.paid);
-    }
-  });
-  ```
+
+```ts
+test("a refund never exceeds what was paid", async () => {
+  const refunds = await db.refunds.findMany({ orderId: order.id });
+  for (const refund of refunds) {
+    expect(refund.amount).toBeLessThanOrEqual(order.paid);
+  }
+});
+```
 
 == A story about Jack
-  *The post-mortem*
-  - Every test was green
-  - Every pull request was reviewed and approved
-  - The code did exactly what it said
 
-But nobody wrote down what must be true.
+*The post-mortem*
+- Every test was green
+- Every pull request was reviewed and approved
+- The code did exactly what it said
+
+#v(0.6em)
+But nobody wrote down *what must be true*.
 
 = It's all about proofs and trust
 
@@ -105,18 +121,17 @@ But nobody wrote down what must be true.
 #grid(
   columns: (1fr, 2.5fr),
   rows: (1fr, 1fr),
-  gutter: 10pt,
-  inset: 12pt,
+  column-gutter: 1cm,
   align: left + horizon,
 
-  [*Rationalists* \ #text(size: 14pt)[Descartes, Spinoza, Leibniz]],
+  [*Rationalists* \ #note[Descartes, Spinoza, Leibniz]],
   [
     - Knowledge comes from *reason* (innate ideas, deduction)
     - Model: *mathematical proof*
     - Limit: can pure reason tell us about the world?
   ],
 
-  [*Empiricists* \ #text(size: 14pt)[Locke, Berkeley, Hume]],
+  [*Empiricists* \ #note[Locke, Berkeley, Hume]],
   [
     - Knowledge comes from *experience* (mind as _tabula rasa_)
     - Model: *experience and deductions*
@@ -126,37 +141,38 @@ But nobody wrote down what must be true.
 
 == Collatz: evidence without proof
 
-#set text(size: 17pt)
+#set text(size: size-dense)
 
 #grid(
   columns: (1.12fr, 1fr),
-  gutter: 20pt,
+  column-gutter: 1cm,
   align: horizon,
   [
     *The rule:* take any $n$. If even, $n -> n/2$; if odd, $n -> 3n+1$. Repeat.
 
     *Conjecture (Collatz, 1937):* you always end up at 1.
 
-    #text(size: 15pt)[$6 -> 3 -> 10 -> 5 -> 16 -> 8 -> 4 -> 2 -> 1$]
+    $6 -> 3 -> 10 -> 5 -> 16 -> 8 -> 4 -> 2 -> 1$
 
     - Checked for every $n$ up to $2^71 approx 2.36 times 10^21$ (Barina, 2025)
     - Still no proof
 
-    #block(fill: luma(240), inset: 8pt, radius: 4pt)[
+    #callout[
       Billions of billions of cases ≠ certainty: the next number could be the exception.
     ]
   ],
-  image("images/collatz.png", width: 100%, height: 80%, fit: "contain"),
+  image("images/collatz.png", width: 100%, height: 85%, fit: "contain"),
 )
 
 == Reason alone: truths no experiment can reach
 
-#set text(size: 16pt)
+#set text(size: size-dense)
 
 #grid(
   columns: (2fr, 1fr),
-  rows: (1fr, 1fr, auto),
-  gutter: 14pt,
+  rows: (1fr, 1fr),
+  column-gutter: 1cm,
+  row-gutter: 0.6cm,
   align: horizon,
   [
     *There are infinitely many primes* (Euclid, c. 300 BCE) \
@@ -174,18 +190,19 @@ But nobody wrote down what must be true.
 
 == The Four Colour Theorem: a proof no human can read
 
-#set text(size: 15pt)
+#set text(size: size-dense)
 
 #grid(
   columns: (1.6fr, 1fr),
-  gutter: 20pt,
+  column-gutter: 1cm,
   align: horizon,
   [
     _Any map can be coloured with 4 colours so that neighbouring regions differ._
 
     #table(
       columns: (auto, 1fr),
-      inset: 6pt,
+      inset: (x: 0pt, y: 5pt),
+      column-gutter: 0.6em,
       align: left + horizon,
       stroke: none,
       [*1879*], [Kempe publishes a "proof", accepted for 11 years],
@@ -195,7 +212,7 @@ But nobody wrote down what must be true.
       [*2005*], [Gonthier verifies the full proof in the Coq proof assistant],
     )
 
-    #block(fill: luma(240), inset: 8pt, radius: 4pt)[
+    #callout[
       *The question:* if no human can check it, is it still a proof? Do we _know_ the theorem, or do we _trust_ the machine?
     ]
   ],
@@ -204,12 +221,13 @@ But nobody wrote down what must be true.
 
 == Curry–Howard: proofs are programs
 
-  *Theorem (Curry 1934–1958, Howard 1969).* 
-  
-  Proofs in intuitionistic logic are exactly the programs of the typed $lambda$-calculus: \ 
-  a proposition is provable if and only if the corresponding type has a program.
+*Theorem (Curry 1934–1958, Howard 1969).*
 
-  Checking a proof = checking a program's type
+Proofs in intuitionistic logic are exactly the programs of the typed $lambda$-calculus:
+a proposition is provable if and only if the corresponding type has a program.
+
+#v(0.6em)
+#callout[*Checking a proof = checking a program's type.*]
 
 
 // These slides keep the section's name in the header and put their
@@ -219,11 +237,15 @@ But nobody wrote down what must be true.
 #let theorem-slide = message-slide.with(title: [Theorem provers])
 
 == Theorem Provers
-  #grid(
-    columns: (2fr, 1fr),
+
+#grid(
+  columns: (1.4fr, 1fr),
+  column-gutter: 1cm,
+  align: horizon,
   table(
     columns: (auto, 1fr),
-    inset: 6pt,
+    inset: (x: 0pt, y: 5pt),
+    column-gutter: 0.6em,
     align: left + horizon,
     stroke: none,
     [*1984*], [Coquand and Huet start it at Inria],
@@ -233,15 +255,16 @@ But nobody wrote down what must be true.
     [*2013*], [ACM Software System Award],
     [*2025*], [Renamed *Rocq*, after Rocquencourt],
   ),
-  image("../template/images/rocq-logo.svg")
-
-  )
-
-== Theorem Provers
-  #align(center + horizon, image("/template/images/lean-logo.svg", width: 35%))
+  image("/template/images/rocq-logo.svg", width: 100%),
+)
 
 == Theorem Provers
-  #{
+
+#align(center + horizon, image("/template/images/lean-logo.svg", width: 35%))
+
+== Theorem Provers
+
+#{
     let card(name, hook, body) = box(
       width: 100%,
       height: 3.9cm,
@@ -249,10 +272,10 @@ But nobody wrote down what must be true.
       radius: 6pt,
       inset: 0.8em,
       [
-        #text(size: 1.1em, weight: "bold", fill: coral, name) \
-        #text(weight: "bold", size: 0.8em, hook) \
-        #v(-0.3em)
-        #text(size: 0.65em, fill: luma(80), body)
+        #text(size: 22pt, weight: "bold", fill: coral, name) \
+        #text(size: 16pt, weight: "bold", hook) \
+        #v(-0.2em)
+        #text(size: 14pt, fill: luma(80), body)
       ],
     )
     grid(
@@ -272,7 +295,7 @@ But nobody wrote down what must be true.
       card[Agda][Proofs are programs][The playground where type theorists try
         their ideas first],
     )
-  }
+}
 
 = Vericoding
 
@@ -286,7 +309,6 @@ Writing *what you want to prove* is much easier.]
 
 #align(center + horizon, {
   import "@preview/fletcher:0.5.8" as fletcher: diagram, node, edge
-  let ink = rgb("#23373b")
   let actor(pos, name, body, ..args) = node(
     pos,
     box(width: 6.2cm, align(center)[
@@ -322,43 +344,42 @@ Writing *what you want to prove* is much easier.]
 == Example: the code
 
 #grid(
-  columns: (1fr, 1fr),
-  column-gutter: 0.8cm,
+  columns: (1.05fr, 1fr),
+  column-gutter: 0.6cm,
   align: horizon,
-  rocq-file("/theories/Orders.v", lines: (7, 15), size: 1em),
-  {
-    // Signatures only, read from the checked file: bodies elided.
+  rocq-file("/theories/Orders.v", lines: (7, 15), size: code-small),
+  small-code({
+    // Signatures only, read from the checked file: bodies elided, the
+    // arguments on their own line so that both columns fit.
     let src = read("/theories/Orders.v").split("\n")
-    let sig(n) = src.at(n - 1).trim() + " ..."
-    text(size: 1em, raw(lang: "rocq", block: true, (
+    let sig(n) = {
+      let l = src.at(n - 1).trim()
+      let i = l.position(" (")
+      l.slice(0, i) + "\n " + l.slice(i) + " ..."
+    }
+    raw(lang: "rocq", block: true, (
       "(* Was this event already handled? *)", sig(20), "",
       "(* Apply one event to an order. *)", sig(23), "",
       "(* The order, rebuilt from its events. *)", sig(38),
-    ).join("\n")))
-  },
+    ).join("\n"))
+  }),
 )
 
 == Example: the specification
 
 #rocq-file("/theories/Orders.v", lines: (51, 52))
 
-#v(0.5em)
+#v(0.6em)
 - Written by *you*: an order never refunds more than it was paid
 - True for *every* sequence of events: not just the cases you thought of testing
 - Two lines to review, readable *without the proof*
 
 == Example: the proof
 
-#grid(
-  columns: (1.12fr, 1fr),
-  column-gutter: 0.5cm,
-  align: top,
-  rocq-file("/theories/Orders.v", lines: (42, 49), size: 1em),
-  rocq-file("/theories/Orders.v", lines: (51, 59), size: 1em),
-)
+#rocq-file("/theories/Orders.v", lines: ((42, 49), (51, 59)), size: code-small)
 
-#v(0.5em)
-#set text(size: 0.85em)
+#v(0.3em)
+#set text(size: size-dense)
 - Written by *the agent*: first a lemma about *one* event, then induction over *all* of them
 - `Qed.`: Rocq accepted every step. A wrong proof *does not compile*
 - You do not have to read it, only the statement
@@ -371,26 +392,21 @@ Writing *what you want to prove* is much easier.]
 
 == From proof to production
 
-#align(center + horizon)[
-  #text(size: 24pt)[
-    Rocq *extracts* the proved function to a real language.
+#hero[
+  Rocq *extracts* the proved function to a real language.
 
-    The rest of the app calls it *like any other library*.
-  ]
-
+  The rest of the app calls it *like any other library*.
 ]
+
 == Event processing: an order is a list of events
 
 #grid(
-  columns: (1.1fr, 1fr),
-  column-gutter: 1cm,
+  columns: (1.4fr, 1fr),
+  column-gutter: 0.6cm,
+  align: horizon,
+  rocq-file("/theories/Orders.v", lines: ((7, 15), (23, 23), (37, 39)), size: code-small),
   [
-    #rocq-file("/theories/Orders.v", lines: (7, 15), size: 0.75em)
-    #rocq-file("/theories/Orders.v", lines: (23, 23), size: 0.75em)
-    #rocq-file("/theories/Orders.v", lines: (37, 39), size: 0.75em)
-  ],
-  [
-    #set text(size: 0.85em)
+    #set text(size: size-dense)
     - Every change is an *event*: a payment, a refund
     - The order is *replayed* from its events, one `handle` at a time
     - Queues deliver *at least once*: the same event can arrive *twice*
@@ -400,51 +416,52 @@ Writing *what you want to prove* is much easier.]
 
 == Event processing: Jack's refunds, proved
 
-#rocq-file("/theories/Orders.v", lines: (51, 52), size: 0.8em)
+#rocq-file("/theories/Orders.v", lines: (51, 52))
 
 Whatever events arrive, in whatever order: *never more refunded than paid*.
 
-#v(0.8em)
+#v(0.6em)
 
-#rocq-file("/theories/Orders.v", lines: (61, 62), size: 0.8em)
+#rocq-file("/theories/Orders.v", lines: (61, 62))
 
 An event delivered twice is *counted once*.
 
-#v(0.8em)
-#align(center)[Friday, 23:47 *cannot happen*.]
+#v(0.6em)
+#align(center)[Friday, 22h57 *cannot happen*.]
 
 == Shipping it: extraction to OCaml
 
-#rocq-file("/extraction/OrdersExtraction.v", lines: (4, 7), size: 0.65em)
+#rocq-file("/extraction/OrdersExtraction.v", lines: (4, 7), size: code-small)
 
 #grid(
-  columns: (1fr, 1.1fr),
-  column-gutter: 0.8cm,
+  columns: (1.05fr, 1fr),
+  column-gutter: 0.6cm,
   align: top,
   [
-    #text(size: 0.6em, fill: luma(120))[Rocq: `theories/Orders.v`]
-    #rocq-file("/theories/Orders.v", lines: (7, 15), size: 0.62em)
+    #note[Rocq: `theories/Orders.v`]
+    #rocq-file("/theories/Orders.v", lines: (7, 15), size: code-small)
   ],
-  [
-    #text(size: 0.6em, fill: luma(120))[OCaml: `orders.mli`, written by `dune build`]
-    #text(size: 0.62em)[
+  small-code[
+    #note[OCaml: `orders.mli`, written by `dune build`]
 ```ocaml
 type event =
 | Paid of int * int
 | Refunded of int * int
 
-type order = { seen : int list; paid : int; refunded : int }
+type order = {
+  seen : int list;
+  paid : int;
+  refunded : int;
+}
 
 val handle : order -> event -> order
 val replay : event list -> order
 ```
-    ]
   ],
 )
 
 == Shipping it: a Kafka consumer
 
-#text(size: 0.7em)[
 ```ocaml
 (* consumer.ml: the thin shell around the proved core *)
 let rec loop state =
@@ -457,10 +474,9 @@ let rec loop state =
       loop next
   | Kafka.PartitionEnd _ -> loop state
 ```
-]
 
 #[
-  #set text(size: 0.85em)
+  #set text(size: size-dense)
   - The shell only *parses*, *persists* and *acknowledges*: a few lines, reviewed by hand
   - A crash between `save` and the acknowledgement? Kafka delivers the event *again*:
     `delivered_twice_counted_once` says it is harmless
@@ -478,9 +494,8 @@ const [state, dispatch] = useReducer(reducer, initialState);
 - Same state, same event: *same next state*, and no side effects
 - React counts on it: in Strict Mode, it calls your reducer *twice*
 
-#v(0.5em)
+#v(0.6em)
 #{
-  let ink = rgb("#23373b")
   let stage(name, note, fill: luma(240)) = box(
     width: 4.4cm,
     fill: fill,
@@ -488,11 +503,11 @@ const [state, dispatch] = useReducer(reducer, initialState);
     inset: (y: 0.6em),
     align(center)[
       #text(weight: "bold", fill: ink, name) \
-      #text(size: 0.65em, fill: luma(100), note)
+      #text(size: size-note, fill: luma(100), note)
     ],
   )
   let step(label) = align(center)[
-    #text(size: 0.55em, style: "italic", fill: luma(120), label) \
+    #text(size: size-note, style: "italic", fill: luma(120), label) \
     #text(size: 1.1em, fill: luma(150))[$arrow.long$]
   ]
   align(center, grid(
@@ -509,9 +524,9 @@ const [state, dispatch] = useReducer(reducer, initialState);
   ))
 }
 
-#v(0.8em)
-*Rocqducers*:
-#link("https://github.com/vbergeron/rocqducers")[github.com/vbergeron/rocqducers]
+#v(0.6em)
+#align(center, note[*Rocqducers*:
+  #link("https://github.com/vbergeron/rocqducers")[github.com/vbergeron/rocqducers]])
 
 == Remember the refund button?
 
@@ -521,54 +536,52 @@ const [state, dispatch] = useReducer(reducer, initialState);
 
 #rocq-file("/theories/AsyncButton.v", lines: (17, 20))
 
-#v(1em)
+#v(0.6em)
 A click while the request is in flight *does nothing*.
 
 == The pick list: the model
 
-#rocq-file("/theories/PickList.v", lines: (7, 9), size: 0.8em)
+#rocq-file("/theories/PickList.v", lines: (7, 9))
 
-#v(0.5em)
-
-#text(size: 0.8em)[
 ```rocq
 reducer : state A -> event -> state A
 init    : A -> list A -> state A
 size    : state A -> nat
 ```
-]
 
-#v(0.5em)
+#v(0.6em)
 - `init d rest` starts with `d` picked and every item of `rest` suggested
 - `size s` counts the items, picked or suggested
 
 == The pick list: the theorems
 
-#rocq-file("/theories/PickList.v", lines: (71, 72), size: 0.8em)
+#rocq-file("/theories/PickList.v", lines: (71, 72))
 
 Whatever the user clicks, *at least one item stays picked*.
 
-#v(0.8em)
+#v(0.6em)
 
-#rocq-file("/theories/PickList.v", lines: (106, 107), size: 0.8em)
+#rocq-file("/theories/PickList.v", lines: (106, 107))
 
 Whatever the user clicks, *no item is ever lost or duplicated*.
 
 == The pick list: the proof, one step
 
-#rocq-file("/theories/PickList.v", lines: (54, 68), size: 0.75em)
+#rocq-file("/theories/PickList.v", lines: (54, 68))
 
 == The pick list: the proof, any run
 
 #[
   #show "reducer_keeps_picked": set text(weight: "bold")
-  #rocq-file("/theories/PickList.v", lines: (70, 80), size: 0.8em)
+  #rocq-file("/theories/PickList.v", lines: (70, 80))
 ]
 
-#v(0.5em)
+#v(0.6em)
 One step never empties the list; *by induction*, no run ever does.
 
 == More frontend use cases
+
+#set text(size: 18pt)
 
 #grid(
   columns: (1fr, 1fr),
@@ -593,10 +606,10 @@ One step never empties the list; *by induction*, no run ever does.
 == Embedded firmware: the device is a state machine
 
 #grid(
-  columns: (1.1fr, 1fr),
-  column-gutter: 1cm,
-  [
-    #text(size: 0.75em)[
+  columns: (1fr, 1fr),
+  column-gutter: 0.6cm,
+  align: horizon,
+  small-code[
 ```rocq
 step : state -> cmd -> state * resp
 
@@ -614,10 +627,9 @@ Inductive cmd :=
 | Unblock (puk_guess new_pin : list nat)
 | ...
 ```
-    ]
   ],
   [
-    #set text(size: 0.85em)
+    #set text(size: size-dense)
     - Your SIM card's PIN: 3 wrong tries and it blocks, the PUK unblocks it,
       10 wrong PUKs and the card is dead
     - The whole logic is *one pure function*, written and proved in Rocq
@@ -627,8 +639,8 @@ Inductive cmd :=
   ],
 )
 
-#v(0.5em)
-#text(size: 0.7em)[
+#v(0.6em)
+#note[
   _From Rocq to Metal: A Pipeline for Formally Verified Microcontroller
   Firmware_:
   #link("https://arxiv.org/abs/2606.02651")[arXiv:2606.02651]
@@ -637,18 +649,18 @@ Inductive cmd :=
 
 == Embedded firmware: what the card guarantees
 
-#rocq-file("/theories/Pin.v", lines: (96, 97), size: 0.8em)
+#rocq-file("/theories/Pin.v", lines: (96, 97))
 
 The card *only unlocks with the right PIN*.
 
-#v(0.8em)
+#v(0.6em)
 
-#rocq-file("/theories/Pin.v", lines: (109, 110), size: 0.8em)
+#rocq-file("/theories/Pin.v", lines: (109, 110))
 
 A card blocked for good *stays blocked*, whatever you send it.
 
-#v(0.8em)
-#text(size: 0.7em)[
+#v(0.6em)
+#note[
   PIN and PUK logic of a SIM card:
   #link("https://github.com/vbergeron/encore-benchmarks/tree/main/workloads/w4_pin")[encore-benchmarks, workload W4]
 ]
@@ -659,7 +671,7 @@ A card blocked for good *stays blocked*, whatever you send it.
 
 #v(0.3em)
 #{
-  set text(size: 0.8em)
+  set text(size: size-dense)
   align(center, table(
     columns: 4,
     align: (left, left, center, left),
@@ -673,13 +685,16 @@ A card blocked for good *stays blocked*, whatever you send it.
   ))
 }
 
-#v(0.5em)
+#v(0.6em)
+#set text(size: 18pt)
 - The core is *pure*: state and event in, new state out. That is what makes it provable
 - The shell does all the I/O, and *no business rule*: small enough to review by hand
 - The boundary enforces itself: the core is generated code, with no access to the network,
   the disk or the clock
 
 == What it changes in your codebase
+
+#set text(size: 18pt)
 
 - *Tests move to the shell*: a theorem covers every input of the core, tests cover the I/O
   around it
