@@ -119,13 +119,15 @@
   )
   title-slide()
 
-  // "Follow along" QR codes: the deck's PDF and the site. Needs the deck
-  // published at base-url + "decks/" + slug + ".pdf". Shown after the title
-  // and again as the closing slide.
-  let follow-along = if slug != "" {
-    slide[
+  // QR codes to the deck's PDF and the site. Needs the deck published at
+  // base-url + "decks/" + slug + ".pdf". Opens the deck as "Follow along"
+  // and closes it as the thank-you slide.
+  let qr-slide(message) = if slug != "" {
+    // An empty title, not none: otherwise the header repeats the last
+    // slide's heading.
+    slide(title: [])[
       #align(center + horizon)[
-        #text(size: 24pt, weight: "bold")[Follow along]
+        #message
         #v(1em)
         #grid(
           columns: (1fr, 1fr),
@@ -137,11 +139,15 @@
       ]
     ]
   }
-  follow-along
+  qr-slide(text(size: 24pt, weight: "bold")[Follow along])
 
   body
 
-  follow-along
+  qr-slide[
+    #text(size: 32pt, weight: "bold", fill: coral)[Thank you for your attention]
+    #v(0.2em)
+    #text(size: 18pt, fill: luma(100))[Questions?]
+  ]
 
   if links.len() > 0 {
     slide[
