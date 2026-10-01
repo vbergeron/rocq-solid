@@ -86,6 +86,37 @@
   raw(src, lang: "rocq", block: true)
 }
 
+// A toolchain, left to right: stages `(name, note)` alternating with the
+// label of the step between them. The first stage, where the proofs live,
+// is tinted.
+//   #pipeline(([Rocq], [reducer + proofs]), [extraction], ([OCaml], [hook]))
+#let pipeline(..items) = {
+  let ink = rgb("#23373b")
+  let stage(name, note, fill: luma(240)) = box(
+    width: 4.4cm,
+    fill: fill,
+    radius: 6pt,
+    inset: (y: 0.6em),
+    align(center)[
+      #text(weight: "bold", fill: ink, name) \
+      #text(size: 0.65em, fill: luma(100), note)
+    ],
+  )
+  let step(label) = align(center)[
+    #text(size: 0.55em, style: "italic", fill: luma(120), label) \
+    #text(size: 1.1em, fill: luma(150))[$arrow.long$]
+  ]
+  let items = items.pos()
+  align(center, grid(
+    columns: items.len(),
+    column-gutter: 0.3em,
+    align: horizon,
+    ..items.enumerate().map(((i, it)) => if calc.odd(i) { step(it) } else {
+      stage(..it, fill: if i == 0 { coral.lighten(88%) } else { luma(240) })
+    })
+  ))
+}
+
 #let qr-card(url, label: none, width: 4cm) = align(center)[
   #tiaoma.qrcode(url, width: width)
   #v(0.4em)
@@ -141,12 +172,15 @@
   )
   title-slide()
 
-  // "Follow along" QR codes: the deck's PDF and the site. Needs the deck
-  // published at base-url + "decks/" + slug + ".pdf".
-  if slug != "" {
-    slide[
+  // QR codes to the deck's PDF and the site. Needs the deck published at
+  // base-url + "decks/" + slug + ".pdf". Opens the deck as "Follow along"
+  // and closes it as the thank-you slide.
+  let qr-slide(message) = if slug != "" {
+    // An empty title, not none: otherwise the header repeats the last
+    // slide's heading.
+    slide(title: [])[
       #align(center + horizon)[
-        #text(size: 24pt, weight: "bold")[Follow along]
+        #message
         #v(1em)
         #grid(
           columns: (1fr, 1fr),
@@ -158,8 +192,15 @@
       ]
     ]
   }
+  qr-slide(text(size: 24pt, weight: "bold")[Follow along])
 
   body
+
+  qr-slide[
+    #text(size: 32pt, weight: "bold", fill: coral)[Thank you for your attention]
+    #v(0.2em)
+    #text(size: 18pt, fill: luma(100))[Questions?]
+  ]
 
   if links.len() > 0 {
     slide[

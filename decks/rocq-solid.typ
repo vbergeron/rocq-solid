@@ -414,6 +414,12 @@ Writing *what you want to prove* is much easier.]
   ],
 )
 
+#v(0.5em)
+#pipeline(
+  ([Rocq], [`handle` + proofs]), [extraction],
+  ([OCaml], [called by the consumer]),
+)
+
 == Event processing: Jack's refunds, proved
 
 #rocq-file("/theories/Orders.v", lines: (51, 52))
@@ -495,34 +501,12 @@ const [state, dispatch] = useReducer(reducer, initialState);
 - React counts on it: in Strict Mode, it calls your reducer *twice*
 
 #v(0.6em)
-#{
-  let stage(name, note, fill: luma(240)) = box(
-    width: 4.4cm,
-    fill: fill,
-    radius: 6pt,
-    inset: (y: 0.6em),
-    align(center)[
-      #text(weight: "bold", fill: ink, name) \
-      #text(size: size-note, fill: luma(100), note)
-    ],
-  )
-  let step(label) = align(center)[
-    #text(size: size-note, style: "italic", fill: luma(120), label) \
-    #text(size: 1.1em, fill: luma(150))[$arrow.long$]
-  ]
-  align(center, grid(
-    columns: 7,
-    column-gutter: 0.3em,
-    align: horizon,
-    stage(fill: coral.lighten(88%))[Rocq][reducer + proofs],
-    step[extraction],
-    stage[OCaml][reducer + hook],
-    step[Melange],
-    stage[JavaScript][ES module],
-    step[import],
-    stage[React][imports the hook],
-  ))
-}
+#pipeline(
+  ([Rocq], [reducer + proofs]), [extraction],
+  ([OCaml], [reducer + hook]), [Melange],
+  ([JavaScript], [ES module]), [import],
+  ([React], [imports the hook]),
+)
 
 #v(0.6em)
 #align(center, note[*Rocqducers*:
@@ -539,6 +523,7 @@ const [state, dispatch] = useReducer(reducer, initialState);
 #v(0.6em)
 A click while the request is in flight *does nothing*.
 
+/*
 == The pick list: the model
 
 #rocq-file("/theories/PickList.v", lines: (7, 9))
@@ -564,20 +549,7 @@ Whatever the user clicks, *at least one item stays picked*.
 #rocq-file("/theories/PickList.v", lines: (106, 107))
 
 Whatever the user clicks, *no item is ever lost or duplicated*.
-
-== The pick list: the proof, one step
-
-#rocq-file("/theories/PickList.v", lines: (54, 68))
-
-== The pick list: the proof, any run
-
-#[
-  #show "reducer_keeps_picked": set text(weight: "bold")
-  #rocq-file("/theories/PickList.v", lines: (70, 80))
-]
-
-#v(0.6em)
-One step never empties the list; *by induction*, no run ever does.
+*/
 
 == More frontend use cases
 
@@ -637,6 +609,12 @@ Inductive cmd :=
     - That same function *runs on the microcontroller*, in the *Encore!* VM:
       what runs is what was proved
   ],
+)
+
+#pipeline(
+  ([Rocq], [`step` + proofs]), [extraction],
+  ([Scheme], [extracted code]), [compilation],
+  ([Encore! VM], [on the microcontroller]),
 )
 
 #v(0.6em)
