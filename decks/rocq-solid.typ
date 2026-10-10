@@ -14,70 +14,51 @@
 
 = A story about Jack
 
-== A story about Jack
+== Jack is a full stack engineer
 
-#grid(
-  columns: (2fr, 1fr),
-  column-gutter: 1cm,
-  align: horizon,
-  [
-    - Full stack developer at a small e-shop startup
-    - Twelve engineers, one product, a roadmap that doubles every quarter
-    - Frontend in the morning, database migrations after lunch, on call at night
-  ],
-  image("images/engineer.webp", width: 100%),
-)
+- At a fast-growing startup
+- Twelve engineers, one product, a roadmap that doubles every quarter
+- Frontend in the morning, database migrations after lunch, on call at night
 
-== A story about Jack
+== Jack loves Claude
 
-#hero[
-  Claude writes the feature.
+#hero[Claude writes the feature.
 
-  Claude writes the tests.
+Claude writes the tests.
 
-  Jack *loves* Claude.
-]
+CI is green. *Ship it.*]
 
-== A story about Jack
+== Six good months, not a single incident
 
-#grid(
-  columns: (2fr, 1fr),
-  column-gutter: 1cm,
-  align: horizon,
-  [
-    The past 9 months have been a *blast*!
-    - Three times as many pull requests merged per week
-    - Coverage above 90%, and climbing
+- Three times as many pull requests merged per week
+- Coverage above 90%, and climbing
 
-    #v(0.6em)
-    Jack reads every diff. Well, most of them. _The tests are green anyway._
-  ],
-  image("images/klod.jpg", width: 100%),
-)
+#v(1em)
+Jack reads every diff. Well, most of them. The tests are green anyway.
 
-== A story about Jack
+== Friday, 23:47
 
-#moment[Friday, 10h00][
-  Product asks for *partial refunds*: one button, one click per refund.
+#hero[A customer notices the refund button *works more than once*.
 
-  Claude does the job from the front to the DB.
+By Monday morning: *€180,000* refunded, on *€40,000* of orders.]
 
-  The tests are still green.
-]
+== Monday, 9:00: everything was green
 
-== A story about Jack
+- Every test was green
+- Every pull request was reviewed and approved
+- The code did exactly what it said
 
-#moment[Friday, 22h57][
-  A customer notices the refund button *works more than once*.
-]
+#v(1em)
+#align(center)[*So how did €140,000 walk out the door?*]
 
-== A story about Jack
+== Three weeks earlier, support asked for partial refunds
 
-#moment[Monday, 08h43][
-  *€180,000* refunded, on *€40* of orders.
-]
+- One button, one click per refund
+- Claude adds the button; each click stores a new `Refund`
+- `order.refund` now points to the latest one
+- `refundable` still subtracts a single refund: all tests pass
 
-== A story about Jack
+== "An order is refunded at most once"
 
 ```ts
 type Order = {
@@ -88,12 +69,12 @@ type Order = {
 
 const refundable = (o: Order) => o.paid - (o.refund?.amount ?? 0);
 ```
-/*
-  "At most once" was never asked for. Claude *guessed*, it read well,
-  and the guess became the domain model.
-*/
 
-== A story about Jack
+Nobody said an order is refunded at most once.
+
+Claude *guessed*, it read well, and the guess became the domain model.
+
+== The test that could never fail
 
 ```ts
 test("a refund never exceeds what was paid", async () => {
@@ -104,15 +85,17 @@ test("a refund never exceeds what was paid", async () => {
 });
 ```
 
-== A story about Jack
+The fixture creates an order, but *no refund*. The loop never runs.
 
-*The post-mortem*
-- Every test was green
-- Every pull request was reviewed and approved
-- The code did exactly what it said
+This test was green on day one, and will be green forever.
 
-#v(0.6em)
-But nobody wrote down *what must be true*.
+== Nobody had written down what must be true
+
+#hero[The rule was in everyone's head.
+
+It was in the name of a test.
+
+*It was never checked.*]
 
 = It's all about proofs and trust
 
