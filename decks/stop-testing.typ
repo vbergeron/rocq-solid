@@ -106,6 +106,31 @@ a proposition is provable if and only if the corresponding type has a program.
 #callout[*Checking a proof = checking a program's type.*]
 
 
+== Descartes as a shadow FP maximalist ?
+
+#{
+  // One column per school: portrait, name, motto, members.
+  let school(img, name, motto, members) = align(center, stack(
+    spacing: 0.5em,
+    box(clip: true, radius: 6pt, image(img, height: 6.5cm)),
+    text(size: 24pt, weight: "bold", fill: coral, name),
+    text(size: size-dense, motto),
+    note(members),
+  ))
+  align(center + horizon, grid(
+    columns: (1fr, auto, 1fr),
+    column-gutter: 1cm,
+    align: horizon,
+    school("images/hume.jpg", [Testers],
+      [Trust the CI bro],
+      [Locke, Berkeley, Hume]),
+    text(size: 32pt, weight: "bold", fill: luma(160))[VS],
+    school("images/descartes.webp", [Typers],
+      [If it compiles it works], [Descartes, Spinoza, Leibniz]),
+  ))
+}
+
+
 == Theorem provers: Rocq
 
 #grid(
