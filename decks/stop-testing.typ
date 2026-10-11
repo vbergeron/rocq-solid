@@ -95,17 +95,6 @@ object Fixtures:
   ))
 }
 
-== Curry–Howard: proofs are programs
-
-*Theorem (Curry 1934–1958, Howard 1969).*
-
-Proofs in intuitionistic logic are exactly the programs of the typed $lambda$-calculus:
-a proposition is provable if and only if the corresponding type has a program.
-
-#v(0.6em)
-#callout[*Checking a proof = checking a program's type.*]
-
-
 == Descartes as a shadow FP maximalist ?
 
 #{
@@ -129,6 +118,17 @@ a proposition is provable if and only if the corresponding type has a program.
       [If it compiles it works], [Descartes, Spinoza, Leibniz]),
   ))
 }
+
+
+== Curry–Howard: proofs are programs
+
+*Theorem (Curry 1934–1958, Howard 1969).*
+
+Proofs in intuitionistic logic are exactly the programs of the typed $lambda$-calculus:
+a proposition is provable if and only if the corresponding type has a program.
+
+#v(0.6em)
+#callout[*Checking a proof = checking a program's type.*]
 
 
 == Theorem provers: Rocq
