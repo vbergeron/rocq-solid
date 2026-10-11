@@ -491,43 +491,34 @@ Writing *what you want to prove* is much easier.]
 == Where it fits best
 
 #{
-  // One card per family: its name, the step it repeats, where you meet it.
-  let card(name, step, body) = box(
+  // One row per family: its name, the step it repeats on one line, where
+  // you meet it.
+  let row(name, step, uses) = box(
     width: 100%,
-    height: 7cm,
     fill: luma(240),
     radius: 6pt,
     inset: 0.8em,
-    [
-      #set align(top)
-      #text(size: 22pt, weight: "bold", fill: coral, name)
-      #v(-0.2em)
-      #small-code(raw(step, lang: "scala", block: true))
-      #v(-0.2em)
-      #set text(size: size-dense)
-      #body
-    ],
+    grid(
+      columns: (5.6cm, 11cm, 1fr),
+      column-gutter: 0.6cm,
+      align: left + horizon,
+      text(size: 22pt, weight: "bold", fill: coral, name),
+      small-code(raw(step, lang: "scala", block: true)),
+      text(size: size-dense, uses),
+    ),
   )
-  grid(
-    columns: (1fr,) * 3,
-    column-gutter: 0.6cm,
-    card([Reducers], "(state, action) =>
-  state")[
-      - Forms, wizards, carts
-      - Undo / redo
-      - Redux, Elm, `useReducer`
+  align(horizon, stack(
+    spacing: 0.5cm,
+    row([Reducers], "(state, action) => state")[
+      Forms, wizards, carts \ Undo / redo \ Redux, Elm, `useReducer`
     ],
-    card([Event processors], "(state, event) =>\n  (state, decisions)")[
-      - Kafka consumers
-      - Event sourcing, ledgers
-      - Replay *is* a fold
+    row([Event processors], "(state, event) => (state, decisions)")[
+      Kafka consumers \ Event sourcing, ledgers \ Replay *is* a fold
     ],
-    card([Actor behaviours], "(state, message) =>\n  (state, replies)")[
-      - Pekko / Akka `Behavior`
-      - Protocols, sessions
-      - Firmware state machines
+    row([Actor behaviours], "(state, message) => (state, replies)")[
+      Pekko / Akka `Behavior` \ Protocols, sessions \ Firmware state machines
     ],
-  )
+  ))
 }
 
 == What it changes in your codebase
