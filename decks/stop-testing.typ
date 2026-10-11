@@ -31,7 +31,7 @@ def canRefund(o: Order, amount: Money): Boolean =
   o.refunds.isEmpty || o.refunds.head.amount + amount <= o.paid
 ```
 
-== Vacuusly True Driven Development
+== Vacuously True Driven Development
 
 ```scala
 test("a refund never exceeds what was paid") {
@@ -58,10 +58,8 @@ object Fixtures:
   column-gutter: 1cm,
   align: horizon,
   [
-    Every test was green
-    #v(1em)
-    Every pull request was reviewed and approved
-    #v(1em)
+    Every test was green \
+    Every pull request was reviewed and approved \
     The code did exactly what it said
     #v(1em)
     #text(size: size-hero)[Nobody wrote down *what must be true*.]
