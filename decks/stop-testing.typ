@@ -220,4 +220,8 @@ a proposition is provable if and only if the corresponding type has a program.
 
 == Rocq-solid
 
-#hero[Be the one who writes down *what must be true*.]
+#align(center + horizon)[
+  #text(size: size-hero)[Be the one who writes down *what must be true*.]
+  #v(1.5em)
+  #qr-card(base-url, width: 4.5cm)
+]
