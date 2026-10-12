@@ -11,7 +11,13 @@
 
 == Hey Claude !
 
-#hero("Can you implement partial refunds ?")
+#hero[
+  Hey Claude, can you implement partial refunds please ? \
+  Make no mistakes !!
+
+  #v(1em)
+  Result: #text(fill: coral)[*180k€ loss in one weekend*]
+]
 
 == Partial refunds
 
