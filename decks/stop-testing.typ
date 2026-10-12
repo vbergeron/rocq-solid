@@ -15,6 +15,7 @@
   Hey Claude, can you implement partial refunds please ? \
   Make no mistakes !!
 
+  #pause
   #v(1em)
   Result: #text(fill: coral)[*180k€ loss in one weekend*]
 ]
