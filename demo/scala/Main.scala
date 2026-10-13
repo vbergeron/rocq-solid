@@ -2,10 +2,10 @@
 // Refunds.scala uses pure function types, an experimental Scala feature.
 //> using options -experimental
 
-// Runs the handler extracted from theories/Orders.v, once on a list of
+// Runs the handler extracted from theories/Redelivery.v, once on a list of
 // events and once on an endless Kafka-like topic with the consumer
 // extracted from theories/Forever.v. Refunds.scala is written by
-// demo/extract.sh.
+// `dune build @extract`.
 import shop.refunds.Refunds.*
 
 // An endless topic: a payment of 100, then the same refund of 30, delivered

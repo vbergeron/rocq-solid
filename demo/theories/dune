@@ -1,0 +1,4 @@
+; The demo's theorems and the order handler they are about. Stdlib only.
+(rocq.theory
+ (name Demo)
+ (theories Stdlib))
