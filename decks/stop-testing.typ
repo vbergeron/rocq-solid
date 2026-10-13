@@ -9,6 +9,9 @@
   date: none,
 )
 
+// A small coral label above each listing.
+#let tag(body) = text(size: size-dense, weight: "bold", fill: coral, body)
+
 == Hey Claude !
 
 #hero[
@@ -20,8 +23,9 @@
   Result: #text(fill: coral)[*180k€ loss in one weekend*]
 ]
 
-== Partial refunds
+== Look mom, `Iterable`
 
+#tag[Before]
 ```scala
 case class Order(id: OrderId, paid: Money, refund: Option[Refund])
 
@@ -29,8 +33,7 @@ def canRefund(o: Order, amount: Money): Boolean =
   o.refund.isEmpty || o.refund.head.amount + amount <= o.paid
 ```
 
-== Look mom, `Iterable`
-
+#tag[After]
 ```scala
 case class Order(id: OrderId, paid: Money, refunds: List[Refund])
 
@@ -40,6 +43,7 @@ def canRefund(o: Order, amount: Money): Boolean =
 
 == Vacuously True Driven Development
 
+#tag[The test]
 ```scala
 test("a refund never exceeds what was paid") {
   val order   = Fixtures.paidOrder(amount = 100)
@@ -50,8 +54,7 @@ test("a refund never exceeds what was paid") {
 }
 ```
 
-== Meanwhile, in `Fixtures.scala`
-
+#tag[Meanwhile, in `Fixtures.scala`]
 ```scala
 object Fixtures:
   def paidOrder(amount: Money): Order =
@@ -79,53 +82,40 @@ object Fixtures:
 #hero("It is all about proofs and trust.")
 
 
-== Yes obviously some guys have thought about it
-
-#{
-  // One column per school: portrait, name, motto, members.
-  let school(img, name, motto, members) = align(center, stack(
-    spacing: 0.5em,
-    box(clip: true, radius: 6pt, image(img, height: 6.5cm)),
-    text(size: 24pt, weight: "bold", fill: coral, name),
-    text(size: size-dense, motto),
-    note(members),
-  ))
-  align(center + horizon, grid(
-    columns: (1fr, auto, 1fr),
-    column-gutter: 1cm,
-    align: horizon,
-    school("images/hume.jpg", [Empiricists],
-      [Knowledge comes from *experience*], [Locke, Berkeley, Hume]),
-    text(size: 32pt, weight: "bold", fill: luma(160))[VS],
-    school("images/descartes.webp", [Rationalists],
-      [Knowledge comes from *reason*], [Descartes, Spinoza, Leibniz]),
-  ))
-}
-
 == Descartes as a shadow FP maximalist ?
 
-#{
-  // One column per school: portrait, name, motto, members.
-  let school(img, name, motto, members) = align(center, stack(
-    spacing: 0.5em,
-    box(clip: true, radius: 6pt, image(img, height: 6.5cm)),
-    text(size: 24pt, weight: "bold", fill: coral, name),
-    text(size: size-dense, motto),
-    note(members),
-  ))
-  align(center + horizon, grid(
-    columns: (1fr, auto, 1fr),
-    column-gutter: 1cm,
-    align: horizon,
+// One column per school: portrait, name, motto, members.
+#let school(img, name, motto, members) = align(center, stack(
+  spacing: 0.5em,
+  box(clip: true, radius: 6pt, image(img, height: 6.5cm)),
+  text(size: 24pt, weight: "bold", fill: coral, name),
+  text(size: size-dense, motto),
+  note(members),
+))
+#let versus(left, right) = align(center + horizon, grid(
+  columns: (1fr, auto, 1fr),
+  column-gutter: 1cm,
+  align: horizon,
+  left,
+  text(size: 32pt, weight: "bold", fill: luma(160))[VS],
+  right,
+))
+
+// Same layout twice: on the click, the schools get their modern names.
+#alternatives(
+  versus(
+    school("images/hume.jpg", [Empiricists],
+      [Knowledge comes from *experience*], [Locke, Berkeley, Hume]),
+    school("images/descartes.webp", [Rationalists],
+      [Knowledge comes from *reason*], [Descartes, Spinoza, Leibniz]),
+  ),
+  versus(
     school("images/hume.jpg", [Testers],
-      [Trust the CI bro],
-      [Locke, Berkeley, Hume]),
-    text(size: 32pt, weight: "bold", fill: luma(160))[VS],
+      [Trust the CI bro], [Locke, Berkeley, Hume]),
     school("images/descartes.webp", [Typers],
       [If it compiles it works], [Descartes, Spinoza, Leibniz]),
-  ))
-}
-
+  ),
+)
 
 == Curry–Howard: proofs are programs
 
