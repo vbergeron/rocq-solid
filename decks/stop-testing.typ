@@ -160,14 +160,6 @@ a proposition is provable if and only if the corresponding type has a program.
 )
 
 
-== A theorem and its proof
-
-#rocq-file("/theories/Orders.v", lines: (51, 52))
-
-== A theorem and its proof
-
-#rocq-file("/theories/Orders.v", lines: (51, 59))
-
 == Vericoding
 
 #align(center + horizon, {
@@ -205,6 +197,14 @@ a proposition is provable if and only if the corresponding type has a program.
   )
 })
 
+
+== A theorem and its proof
+
+#rocq-file("/theories/Orders.v", lines: (51, 52))
+
+== A theorem and its proof
+
+#rocq-file("/theories/Orders.v", lines: (51, 59))
 
 == Extraction: from proof to production
 
