@@ -9,6 +9,9 @@
   date: none,
 )
 
+// A small coral label above each listing.
+#let tag(body) = text(size: size-dense, weight: "bold", fill: coral, body)
+
 == Hey Claude !
 
 #hero[
@@ -20,8 +23,9 @@
   Result: #text(fill: coral)[*180k€ loss in one weekend*]
 ]
 
-== Partial refunds
+== Look mom, `Iterable`
 
+#tag[Before]
 ```scala
 case class Order(id: OrderId, paid: Money, refund: Option[Refund])
 
@@ -29,8 +33,7 @@ def canRefund(o: Order, amount: Money): Boolean =
   o.refund.isEmpty || o.refund.head.amount + amount <= o.paid
 ```
 
-== Look mom, `Iterable`
-
+#tag[After]
 ```scala
 case class Order(id: OrderId, paid: Money, refunds: List[Refund])
 
@@ -40,6 +43,7 @@ def canRefund(o: Order, amount: Money): Boolean =
 
 == Vacuously True Driven Development
 
+#tag[The test]
 ```scala
 test("a refund never exceeds what was paid") {
   val order   = Fixtures.paidOrder(amount = 100)
@@ -50,8 +54,7 @@ test("a refund never exceeds what was paid") {
 }
 ```
 
-== Meanwhile, in `Fixtures.scala`
-
+#tag[Meanwhile, in `Fixtures.scala`]
 ```scala
 object Fixtures:
   def paidOrder(amount: Money): Order =
