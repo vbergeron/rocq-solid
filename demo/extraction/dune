@@ -1,0 +1,16 @@
+; theories/ extracted to Scala 3 by the rocq-extraction-scala plugin. Only
+; `dune build @extract` runs it: a plain `dune build` checks the proofs,
+; which works without the plugin.
+(rule
+ (alias extract)
+ (targets Refunds.scala RefundsExtraction.vo RefundsExtraction.glob)
+ (deps
+  RefundsExtraction.v
+  ../theories/Redelivery.vo
+  ../theories/Forever.vo)
+ (action
+  (run rocq compile -Q ../theories Demo RefundsExtraction.v)))
+
+(rule
+ (alias default)
+ (action (progn)))

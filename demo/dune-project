@@ -1,0 +1,8 @@
+(lang dune 3.21)
+(using rocq 0.11)
+(name rocq-solid-demo)
+
+; The live demo, a dune project of its own: the repository's root dune never
+; looks in here, and dune-workspace makes this directory the root when dune
+; runs from it. Proving needs Rocq with coq-lsp (boulodrome); `dune build
+; @extract` also needs Rocq >= 9.4 and rocq-extraction-scala, see README.md.

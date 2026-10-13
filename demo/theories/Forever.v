@@ -4,7 +4,7 @@
    paid, at any point. Its proof is left to the AI agent, live, through
    the boulodrome MCP server; demo/README.md runs the demo. *)
 From Stdlib Require Import Streams.
-From Solid Require Import Orders.
+From Demo Require Import Redelivery.
 
 (* The order, then the order after each event of an endless stream. *)
 CoFixpoint states (o : order) (s : Stream event) : Stream order :=

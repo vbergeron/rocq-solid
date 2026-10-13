@@ -1,7 +1,7 @@
 # Live demo: prove it, then ship it to Scala
 
 An AI agent proves a theorem about the refund handler of
-`theories/Orders.v` through the [boulodrome](https://github.com/vbergeron/boulodrome)
+`demo/theories/Redelivery.v` through the [boulodrome](https://github.com/vbergeron/boulodrome)
 MCP server, then the handler is extracted to Scala 3 with
 [rocq-extraction-scala](https://github.com/vbergeron/rocq-extraction-scala)
 and run on an endless Kafka-like topic.
@@ -10,7 +10,7 @@ and run on an endless Kafka-like topic.
 
 Both are stated, and left `Admitted`, for the agent to prove live.
 
-**`theories/Redelivery.v`, `redelivery_is_harmless`**: Kafka delivers at
+**`demo/theories/Redelivery.v`, `redelivery_is_harmless`**: Kafka delivers at
 least once; events already handled can come back later, any number of
 times, in any order, mixed with new ones, and the order is the same as
 if they never had.
@@ -21,7 +21,7 @@ Theorem redelivery_is_harmless : forall before redelivered after : list event,
   replay (before ++ redelivered ++ after) = replay (before ++ after).
 ```
 
-**`theories/Forever.v`, `always_solvent`**: the stream version. A
+**`demo/theories/Forever.v`, `always_solvent`**: the stream version. A
 consumer never sees the whole list, it sees an endless stream; `states`
 is the order after each event, forever, and it never refunds more than
 was paid.
@@ -43,7 +43,7 @@ and an induction with the right generalization, the second a coinduction
 | Extracting to Scala | 9.4 (`master`) | the plugin needs the extraction API of rocq-prover/rocq#22541 |
 
 The `.v` files build with both. Proofs live in the 9.1 switch; only
-`demo/extract.sh` needs the master one:
+`dune build @extract` needs the master one:
 
 ```sh
 opam pin add rocq-runtime git+https://github.com/rocq-prover/rocq#master
@@ -60,27 +60,27 @@ Scala runs through [scala-cli](https://scala-cli.virtuslab.org).
 Code), from the 9.1 switch:
 
 ```json
-{ "mcpServers": { "boulodrome": { "command": "boulodrome", "args": ["."] } } }
+{ "mcpServers": { "boulodrome": { "command": "boulodrome", "args": ["demo"] } } }
 ```
 
-It finds the `Solid` theory from `theories/dune` by itself.
+It finds the `Demo` theory from `demo/theories/dune` by itself.
 
 **2. Ask the agent**, for instance:
 
-> Prove `redelivery_is_harmless` in `theories/Redelivery.v` with the
-> boulodrome tools. Do not change the statement or `theories/Orders.v`;
-> add helper lemmas above it if you need them. Splice the proof in with
+> Prove `redelivery_is_harmless` in `demo/theories/Redelivery.v` with the
+> boulodrome tools. Do not change the statement or the definitions above it;
+> add helper lemmas between them and the theorem if you need them. Splice the proof in with
 > `rocq_proof_script` and finish with `rocq_verify`.
 
-Then the same for `always_solvent` in `theories/Forever.v`.
+Then the same for `always_solvent` in `demo/theories/Forever.v`.
 
-**3. Check it** the usual way: `mise run build`.
+**3. Check it**: `dune build` in `demo/`.
 
 **4. Ship it** (master switch):
 
 ```sh
-demo/extract.sh                 # writes demo/scala/Refunds.scala
-scala-cli run demo/scala        # the consumer on an endless topic
+(cd demo && dune build @extract)   # writes demo/scala/Refunds.scala
+scala-cli run demo/scala            # the consumer on an endless topic
 ```
 
 ```
@@ -105,11 +105,11 @@ arrows (`BigInt -> BigInt -> Boolean`), hence the `-experimental` flag in
 `Main.scala`. The stream is a lazy `RocqLazy` thunk, and the proofs
 are erased.
 
-**5. Reset** after a rehearsal: `git checkout theories/Redelivery.v theories/Forever.v`.
+**5. Reset** after a rehearsal: `git checkout demo/theories`.
 
 ## Known limits
 
-- `Orders.v` compares with Stdlib's `PeanoNat.Nat.eqb` and `leb`, copies
+- `Redelivery.v` compares with Stdlib's `PeanoNat.Nat.eqb` and `leb`, copies
   of the Corelib functions `ExtrScalaNatBigInt` maps, so
   `RefundsExtraction.v` maps those two itself; without it they extract
   as recursive functions on `BigInt`.
