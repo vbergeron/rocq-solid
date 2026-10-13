@@ -1,8 +1,8 @@
 {
   "mcpServers": {
     "boulodrome": {
-      "command": "boulodrome",
-      "args": ["demo"]
+      "command": "opam",
+      "args": ["exec", "--switch=rocq-demo", "--", "boulodrome", "demo"]
     }
   }
 }

@@ -56,11 +56,14 @@ Scala runs through [scala-cli](https://scala-cli.virtuslab.org).
 
 ## Running it
 
-**1. Register boulodrome** in `.mcp.json` at the repository root (Claude
-Code), from the 9.1 switch:
+**1. Register boulodrome**: `.mcp.json` at the repository root already
+does it for Claude Code (approve it on the first `claude` start). It runs
+boulodrome from the `rocq-demo` opam switch, so only `opam` needs to be on
+PATH:
 
 ```json
-{ "mcpServers": { "boulodrome": { "command": "boulodrome", "args": ["demo"] } } }
+{ "mcpServers": { "boulodrome": { "command": "opam",
+  "args": ["exec", "--switch=rocq-demo", "--", "boulodrome", "demo"] } } }
 ```
 
 It finds the `Demo` theory from `demo/theories/dune` by itself.
