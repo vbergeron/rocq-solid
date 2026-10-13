@@ -12,6 +12,9 @@
   slug: "stop-testing-long",
 )
 
+// A small coral label above each listing.
+#let tag(body) = text(size: size-dense, weight: "bold", fill: coral, body)
+
 = Everything was green
 
 == The context
@@ -30,45 +33,67 @@
 
 == Hey Claude !
 
-#hero("Can you implement partial refunds ?")
+#hero[
+  Hey Claude, can you implement partial refunds please ? \
+  Make no mistakes !!
 
-== Partial refunds
-
-```scala
-case class Order(id: OrderId, paid: Money, refund: Option[Refund])
-
-def canRefund(o: Order, amount: Money): Boolean =
-  o.refund.isEmpty || o.refund.head.amount + amount <= o.paid
-```
+  #pause
+  #v(1em)
+  Result: #text(fill: coral)[*180k€ loss in one weekend*]
+]
 
 == Look mom, `Iterable`
 
-```scala
-case class Order(id: OrderId, paid: Money, refunds: List[Refund])
+// Same place on screen: on the click, the code after the refactor.
+#alternatives(
+  [
+    #tag[Before]
+    ```scala
+    case class Order(id: OrderId, paid: Money, refund: Option[Refund])
 
-def canRefund(o: Order, amount: Money): Boolean =
-  o.refunds.isEmpty || o.refunds.head.amount + amount <= o.paid
-```
+    def canRefund(o: Order, amount: Money): Boolean =
+      o.refund.isEmpty || o.refund.head.amount + amount <= o.paid
+    ```
+  ],
+  [
+    #tag[After]
+    ```scala
+    case class Order(id: OrderId, paid: Money, refunds: List[Refund])
+
+    def canRefund(o: Order, amount: Money): Boolean =
+      o.refunds.isEmpty || o.refunds.head.amount + amount <= o.paid
+    ```
+  ],
+)
 
 == Vacuously True Driven Development
 
-```scala
-test("a refund never exceeds what was paid") {
-  val order   = Fixtures.paidOrder(amount = 100)
-  val refunds = db.refunds.findByOrder(order.id)
-  refunds.foreach { r =>
-    assert(r.amount <= order.paid)
-  }
-}
-```
-
-== Meanwhile, in `Fixtures.scala`
-
-```scala
-object Fixtures:
-  def paidOrder(amount: Money): Order =
-    db.orders.insert(Order(OrderId.random(), paid = amount, refunds = Nil))
-```
+// Same place on screen: on the click, the fixture the test relies on.
+// Both boxes share a height so the shorter listing stays at the top.
+#alternatives(
+  block(height: 6.5cm)[
+    #set align(top)
+    #tag[The test]
+    ```scala
+    test("a refund never exceeds what was paid") {
+      val order   = Fixtures.paidOrder(amount = 100)
+      val refunds = db.refunds.findByOrder(order.id)
+      refunds.foreach { r =>
+        assert(r.amount <= order.paid)
+      }
+    }
+    ```
+  ],
+  block(height: 6.5cm)[
+    #set align(top)
+    #tag[Meanwhile, in `Fixtures.scala`]
+    ```scala
+    object Fixtures:
+      def paidOrder(amount: Money): Order =
+        db.orders.insert(Order(OrderId.random(), paid = amount, refunds = Nil))
+    ```
+  ],
+)
 
 == Everything was green
 
@@ -94,53 +119,40 @@ object Fixtures:
 
 #hero("It is all about proofs and trust.")
 
-== Yes obviously some guys have thought about it
-
-#{
-  // One column per school: portrait, name, motto, members.
-  let school(img, name, motto, members) = align(center, stack(
-    spacing: 0.5em,
-    box(clip: true, radius: 6pt, image(img, height: 6.5cm)),
-    text(size: 24pt, weight: "bold", fill: coral, name),
-    text(size: size-dense, motto),
-    note(members),
-  ))
-  align(center + horizon, grid(
-    columns: (1fr, auto, 1fr),
-    column-gutter: 1cm,
-    align: horizon,
-    school("images/hume.jpg", [Empiricists],
-      [Knowledge comes from *experience*], 
-      [Locke, Berkeley, Hume]),
-    text(size: 32pt, weight: "bold", fill: luma(160))[VS],
-    school("images/descartes.webp", [Rationalists],
-      [Knowledge comes from *reason*], [Descartes, Spinoza, Leibniz]),
-  ))
-}
-
 == Descartes as a shadow FP maximalist ?
 
-#{
-  // One column per school: portrait, name, motto, members.
-  let school(img, name, motto, members) = align(center, stack(
-    spacing: 0.5em,
-    box(clip: true, radius: 6pt, image(img, height: 6.5cm)),
-    text(size: 24pt, weight: "bold", fill: coral, name),
-    text(size: size-dense, motto),
-    note(members),
-  ))
-  align(center + horizon, grid(
-    columns: (1fr, auto, 1fr),
-    column-gutter: 1cm,
-    align: horizon,
+// One column per school: portrait, name, motto, members.
+#let school(img, name, motto, members) = align(center, stack(
+  spacing: 0.5em,
+  box(clip: true, radius: 6pt, image(img, height: 6.5cm)),
+  text(size: 24pt, weight: "bold", fill: coral, name),
+  text(size: size-dense, motto),
+  note(members),
+))
+#let versus(left, right) = align(center + horizon, grid(
+  columns: (1fr, auto, 1fr),
+  column-gutter: 1cm,
+  align: horizon,
+  left,
+  text(size: 32pt, weight: "bold", fill: luma(160))[VS],
+  right,
+))
+
+// Same layout twice: on the click, the schools get their modern names.
+#alternatives(
+  versus(
+    school("images/hume.jpg", [Empiricists],
+      [Knowledge comes from *experience*], [Locke, Berkeley, Hume]),
+    school("images/descartes.webp", [Rationalists],
+      [Knowledge comes from *reason*], [Descartes, Spinoza, Leibniz]),
+  ),
+  versus(
     school("images/hume.jpg", [Testers],
-      [Trust the CI bro],
-      [Locke, Berkeley, Hume]),
-    text(size: 32pt, weight: "bold", fill: luma(160))[VS],
+      [Trust the CI bro], [Locke, Berkeley, Hume]),
     school("images/descartes.webp", [Typers],
       [If it compiles it works], [Descartes, Spinoza, Leibniz]),
-  ))
-}
+  ),
+)
 
 
 == Collatz: evidence without proof
@@ -201,6 +213,14 @@ a proposition is provable if and only if the corresponding type has a program.
 
 #v(0.6em)
 #callout[*Checking a proof = checking a program's type.*]
+
+== Theorem provers
+
+#hero[
+  A theorem prover *is* a type checker \
+  for a language whose type system is powerful enough \
+  to express *arbitrary statements about its terms*.
+]
 
 == The Four Colour Theorem: a proof no human can read
 
