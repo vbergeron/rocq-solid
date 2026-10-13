@@ -3,21 +3,20 @@
    plugin (github.com/vbergeron/rocq-extraction-scala). Needs Rocq >= 9.4;
    demo/extract.sh runs it and writes demo/scala/Refunds.scala. *)
 From Stdlib Require Import Arith.
-From ScalaExtraction Require Import ScalaExtraction.
+(* bool, list and nat as Scala's Boolean, List and BigInt. *)
+From ScalaExtraction Require Import ScalaExtraction ExtrScalaNatBigInt.
 From Solid Require Import Orders Forever.
 
 Extraction Language Scala.
 Set Extraction Output Directory ".".
 Set Extraction Scala Package "shop.refunds".
+(* Pure arrows, [A -> B]: the extracted code has no side effects. *)
+Set Extraction Scala Pure Functions.
 
-(* Money as Scala's BigInt, not Peano numbers. *)
-Extract Inductive nat => "BigInt" [ "BigInt(0)" "((n: BigInt) => n + 1)" ]
-  "((fO: Any => Any) => (fS: Any => Any) => (n: BigInt) =>
-      if (n == 0) fO(()) else fS(n - 1))".
-Extract Constant Nat.add => "((n: BigInt) => (m: BigInt) => n + m)".
-Extract Constant PeanoNat.Nat.eqb =>
-  "((n: BigInt) => (m: BigInt) => if (n == m) True() else False())".
-Extract Constant PeanoNat.Nat.leb =>
-  "((n: BigInt) => (m: BigInt) => if (n <= m) True() else False())".
+(* Orders.v compares ids and amounts with Stdlib's [PeanoNat.Nat.eqb]
+   and [PeanoNat.Nat.leb], copies of the Corelib functions that
+   ExtrScalaNatBigInt maps: map them too. *)
+Extract Constant PeanoNat.Nat.eqb => "a => b => a == b".
+Extract Constant PeanoNat.Nat.leb => "a => b => a <= b".
 
 Extraction "Refunds" handle replay states.

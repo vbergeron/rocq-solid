@@ -84,26 +84,34 @@ scala-cli run demo/scala        # the consumer on an endless topic
 ```
 
 ```
-paid=0 refunded=0
-paid=100 refunded=0
-paid=100 refunded=30
-paid=100 refunded=30
+replay: Mk_order(List(3, 2, 1),100,30)
+states: paid=0 refunded=0
+states: paid=100 refunded=0
+states: paid=100 refunded=30
+states: paid=100 refunded=30
 ...
 ```
 
-The topic pays 100, then delivers the same refund of 30 forever: it is
-counted once. `Refunds.scala` holds `handle`, `replay` and `states`,
-money as `BigInt`, and the stream as a lazy `RocqLazy` thunk; the proofs
+`replay` gets the refund of 30 twice and a refund of 90 that would
+overdraw: the duplicate is ignored, the overdraw refused. The endless
+topic pays 100, then delivers the same refund of 30 forever: it is
+counted once.
+
+`Refunds.scala` holds `handle`, `replay` and `states` as plain typed
+methods, `def handle(o: Order)(e: Event): Order`: `ExtrScalaNatBigInt`
+maps money to `BigInt`, lists to `List` and booleans to `Boolean`, and
+`Set Extraction Scala Pure Functions` prints function types with pure
+arrows (`BigInt -> BigInt -> Boolean`), hence the `-experimental` flag in
+`Main.scala`. The stream is a lazy `RocqLazy` thunk, and the proofs
 are erased.
 
 **5. Reset** after a rehearsal: `git checkout theories/Redelivery.v theories/Forever.v`.
 
 ## Known limits
 
-- Mapping `bool` or `list` onto Scala's `Boolean` and `List` with
-  `Extract Inductive` produces Scala that does not compile, so they stay
-  extracted ADTs (`True()`, `Cons(..)`); `nat` to `BigInt` works.
-- The stream constructor is renamed `Cons0` in Scala, since the list one
-  already took `Cons`.
+- `Orders.v` compares with Stdlib's `PeanoNat.Nat.eqb` and `leb`, copies
+  of the Corelib functions `ExtrScalaNatBigInt` maps, so
+  `RefundsExtraction.v` maps those two itself; without it they extract
+  as recursive functions on `BigInt`.
 - For a real consumer, extract `handle` only and let fs2 stream it:
   `kafkaEvents.scan(empty)(handle)` is `states empty`.
