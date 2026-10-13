@@ -25,41 +25,56 @@
 
 == Look mom, `Iterable`
 
-#tag[Before]
-```scala
-case class Order(id: OrderId, paid: Money, refund: Option[Refund])
+// Same place on screen: on the click, the code after the refactor.
+#alternatives(
+  [
+    #tag[Before]
+    ```scala
+    case class Order(id: OrderId, paid: Money, refund: Option[Refund])
 
-def canRefund(o: Order, amount: Money): Boolean =
-  o.refund.isEmpty || o.refund.head.amount + amount <= o.paid
-```
+    def canRefund(o: Order, amount: Money): Boolean =
+      o.refund.isEmpty || o.refund.head.amount + amount <= o.paid
+    ```
+  ],
+  [
+    #tag[After]
+    ```scala
+    case class Order(id: OrderId, paid: Money, refunds: List[Refund])
 
-#tag[After]
-```scala
-case class Order(id: OrderId, paid: Money, refunds: List[Refund])
-
-def canRefund(o: Order, amount: Money): Boolean =
-  o.refunds.isEmpty || o.refunds.head.amount + amount <= o.paid
-```
+    def canRefund(o: Order, amount: Money): Boolean =
+      o.refunds.isEmpty || o.refunds.head.amount + amount <= o.paid
+    ```
+  ],
+)
 
 == Vacuously True Driven Development
 
-#tag[The test]
-```scala
-test("a refund never exceeds what was paid") {
-  val order   = Fixtures.paidOrder(amount = 100)
-  val refunds = db.refunds.findByOrder(order.id)
-  refunds.foreach { r =>
-    assert(r.amount <= order.paid)
-  }
-}
-```
-
-#tag[Meanwhile, in `Fixtures.scala`]
-```scala
-object Fixtures:
-  def paidOrder(amount: Money): Order =
-    db.orders.insert(Order(OrderId.random(), paid = amount, refunds = Nil))
-```
+// Same place on screen: on the click, the fixture the test relies on.
+// Both boxes share a height so the shorter listing stays at the top.
+#alternatives(
+  block(height: 6.5cm)[
+    #set align(top)
+    #tag[The test]
+    ```scala
+    test("a refund never exceeds what was paid") {
+      val order   = Fixtures.paidOrder(amount = 100)
+      val refunds = db.refunds.findByOrder(order.id)
+      refunds.foreach { r =>
+        assert(r.amount <= order.paid)
+      }
+    }
+    ```
+  ],
+  block(height: 6.5cm)[
+    #set align(top)
+    #tag[Meanwhile, in `Fixtures.scala`]
+    ```scala
+    object Fixtures:
+      def paidOrder(amount: Money): Order =
+        db.orders.insert(Order(OrderId.random(), paid = amount, refunds = Nil))
+    ```
+  ],
+)
 
 == Everything was green
 
