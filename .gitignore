@@ -12,6 +12,3 @@ site/decks/
 
 # local mise overrides (e.g. ROCQ_BACKEND = "opam")
 mise.local.toml
-
-# demo: written by `dune build @extract` in demo/
-demo/scala/Refunds.scala
