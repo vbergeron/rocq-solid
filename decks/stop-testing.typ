@@ -84,32 +84,38 @@ object Fixtures:
 
 == Descartes as a shadow FP maximalist ?
 
-#{
-  // One column per school: portrait, the school and its motto, then what
-  // it would be called today.
-  let school(img, name, motto, members, today, today-motto) = align(center, stack(
-    spacing: 0.45em,
-    box(clip: true, radius: 6pt, image(img, height: 5.2cm)),
-    text(size: 22pt, weight: "bold", fill: ink, name),
-    text(size: size-dense, motto),
-    note(members),
-    v(0.6em),
-    text(size: 22pt, weight: "bold", fill: coral, [aka #today]),
-    text(size: size-dense, today-motto),
-  ))
-  align(center + horizon, grid(
-    columns: (1fr, auto, 1fr),
-    column-gutter: 1cm,
-    align: horizon,
+// One column per school: portrait, name, motto, members.
+#let school(img, name, motto, members) = align(center, stack(
+  spacing: 0.5em,
+  box(clip: true, radius: 6pt, image(img, height: 6.5cm)),
+  text(size: 24pt, weight: "bold", fill: coral, name),
+  text(size: size-dense, motto),
+  note(members),
+))
+#let versus(left, right) = align(center + horizon, grid(
+  columns: (1fr, auto, 1fr),
+  column-gutter: 1cm,
+  align: horizon,
+  left,
+  text(size: 32pt, weight: "bold", fill: luma(160))[VS],
+  right,
+))
+
+// Same layout twice: on the click, the schools get their modern names.
+#alternatives(
+  versus(
     school("images/hume.jpg", [Empiricists],
-      [Knowledge comes from *experience*], [Locke, Berkeley, Hume],
-      [Testers], [Trust the CI bro]),
-    text(size: 32pt, weight: "bold", fill: luma(160))[VS],
+      [Knowledge comes from *experience*], [Locke, Berkeley, Hume]),
     school("images/descartes.webp", [Rationalists],
-      [Knowledge comes from *reason*], [Descartes, Spinoza, Leibniz],
-      [Typers], [If it compiles it works]),
-  ))
-}
+      [Knowledge comes from *reason*], [Descartes, Spinoza, Leibniz]),
+  ),
+  versus(
+    school("images/hume.jpg", [Testers],
+      [Trust the CI bro], [Locke, Berkeley, Hume]),
+    school("images/descartes.webp", [Typers],
+      [If it compiles it works], [Descartes, Spinoza, Leibniz]),
+  ),
+)
 
 == Curry–Howard: proofs are programs
 
