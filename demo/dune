@@ -1,1 +1,8 @@
 (dirs theories extraction scala)
+
+; `dune build` checks the proofs only; `dune build @extract` also runs the
+; Scala extraction, which needs the plugin.
+(rule
+ (alias default)
+ (deps (alias_rec theories/default))
+ (action (progn)))

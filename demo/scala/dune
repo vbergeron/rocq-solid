@@ -4,7 +4,3 @@
  (mode promote)
  (targets Refunds.scala)
  (action (copy ../extraction/Refunds.scala Refunds.scala)))
-
-(rule
- (alias default)
- (action (progn)))
