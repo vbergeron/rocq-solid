@@ -82,53 +82,34 @@ object Fixtures:
 #hero("It is all about proofs and trust.")
 
 
-== Yes obviously some guys have thought about it
+== Descartes as a shadow FP maximalist ?
 
 #{
-  // One column per school: portrait, name, motto, members.
-  let school(img, name, motto, members) = align(center, stack(
-    spacing: 0.5em,
-    box(clip: true, radius: 6pt, image(img, height: 6.5cm)),
-    text(size: 24pt, weight: "bold", fill: coral, name),
+  // One column per school: portrait, the school and its motto, then what
+  // it would be called today.
+  let school(img, name, motto, members, today, today-motto) = align(center, stack(
+    spacing: 0.45em,
+    box(clip: true, radius: 6pt, image(img, height: 5.2cm)),
+    text(size: 22pt, weight: "bold", fill: ink, name),
     text(size: size-dense, motto),
     note(members),
+    v(0.6em),
+    text(size: 22pt, weight: "bold", fill: coral, [aka #today]),
+    text(size: size-dense, today-motto),
   ))
   align(center + horizon, grid(
     columns: (1fr, auto, 1fr),
     column-gutter: 1cm,
     align: horizon,
     school("images/hume.jpg", [Empiricists],
-      [Knowledge comes from *experience*], [Locke, Berkeley, Hume]),
+      [Knowledge comes from *experience*], [Locke, Berkeley, Hume],
+      [Testers], [Trust the CI bro]),
     text(size: 32pt, weight: "bold", fill: luma(160))[VS],
     school("images/descartes.webp", [Rationalists],
-      [Knowledge comes from *reason*], [Descartes, Spinoza, Leibniz]),
+      [Knowledge comes from *reason*], [Descartes, Spinoza, Leibniz],
+      [Typers], [If it compiles it works]),
   ))
 }
-
-== Descartes as a shadow FP maximalist ?
-
-#{
-  // One column per school: portrait, name, motto, members.
-  let school(img, name, motto, members) = align(center, stack(
-    spacing: 0.5em,
-    box(clip: true, radius: 6pt, image(img, height: 6.5cm)),
-    text(size: 24pt, weight: "bold", fill: coral, name),
-    text(size: size-dense, motto),
-    note(members),
-  ))
-  align(center + horizon, grid(
-    columns: (1fr, auto, 1fr),
-    column-gutter: 1cm,
-    align: horizon,
-    school("images/hume.jpg", [Testers],
-      [Trust the CI bro],
-      [Locke, Berkeley, Hume]),
-    text(size: 32pt, weight: "bold", fill: luma(160))[VS],
-    school("images/descartes.webp", [Typers],
-      [If it compiles it works], [Descartes, Spinoza, Leibniz]),
-  ))
-}
-
 
 == Curry–Howard: proofs are programs
 
