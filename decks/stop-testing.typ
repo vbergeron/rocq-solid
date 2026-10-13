@@ -143,6 +143,15 @@ a proposition is provable if and only if the corresponding type has a program.
 #callout[*Checking a proof = checking a program's type.*]
 
 
+== Theorem provers
+
+#hero[
+  A theorem prover *is* a type checker \
+  for a language whose type system is powerful enough \
+  to express *arbitrary statements about its terms*.
+]
+
+
 == Vericoding
 
 #align(center + horizon, {
@@ -181,21 +190,13 @@ a proposition is provable if and only if the corresponding type has a program.
 })
 
 
-== Theorem provers: Rocq
+== Rocq
 
-#grid(
-  columns: (1fr, 6cm),
-  column-gutter: 1cm,
-  align: horizon,
-  [
-    A type system powerful enough to express *arbitrary theorems*\
-    Inria in 1984.\
-    *Coq* -> *Rocq* in 2025
-
-    #v(0.6em)
-  ],
-  image("/template/images/rocq-logo.svg", width: 100%),
-)
+#align(center + horizon)[
+  #image("/template/images/rocq-logo.svg", width: 10cm)
+  #v(1em)
+  #text(size: size-dense)[Inria, 1984 · *Coq* → *Rocq* in 2025]
+]
 
 
 == A theorem and its proof
