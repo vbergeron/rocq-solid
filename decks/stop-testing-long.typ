@@ -115,10 +115,6 @@
 
 = It is all about proofs and trust
 
-==
-
-#hero("It is all about proofs and trust.")
-
 == Descartes as a shadow FP maximalist ?
 
 // One column per school: portrait, name, motto, members.
